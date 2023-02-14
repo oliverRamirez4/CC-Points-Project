@@ -42,11 +42,13 @@ public class Analysis {
                     case FORMULA:
                         break;
                     default:
-                        data.get(new Integer(i)).add(" ");
+                        data.get(Integer.valueOf(i)).add(" ");
                 }
             }
             i++;
         }
+
+        return data;
     }
 
     public static void main(String[] args) {
