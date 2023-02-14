@@ -1,8 +1,9 @@
-import jxl.Sheet;
 import jxl.Workbook;
 import jxl.read.biff.BiffException;
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.Row;
+import org.apache.poi.ss.usermodel.Sheet;
+import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -21,7 +22,7 @@ public class Analysis {
             throws IOException, BiffException {
 
         FileInputStream file = new FileInputStream(new File(fileLocation));
-        Workbook workbook = new XSSFWorkbook(file);
+        XSSFWorkbook workbook = new XSSFWorkbook(file);
 
         Sheet sheet = workbook.getSheetAt(0);
 
