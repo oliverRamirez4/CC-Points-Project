@@ -18,6 +18,7 @@ public class Analysis {
         
     }
 
+    // Using apache.poi.ooxml.scemas
     public Map<Integer, List<String>> readJExcel(String fileLocation)
             throws IOException, BiffException {
 
@@ -32,11 +33,16 @@ public class Analysis {
             data.put(i, new ArrayList<String>());
             for (Cell cell : row) {
                 switch (cell.getCellType()) {
-                    case STRING: ... break;
-                    case NUMERIC: ... break;
-                    case BOOLEAN: ... break;
-                    case FORMULA: ... break;
-                    default: data.get(new Integer(i)).add(" ");
+                    case STRING:
+                        break;
+                    case NUMERIC:
+                        break;
+                    case BOOLEAN:
+                        break;
+                    case FORMULA:
+                        break;
+                    default:
+                        data.get(new Integer(i)).add(" ");
                 }
             }
             i++;
