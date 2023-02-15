@@ -13,6 +13,13 @@ import java.util.Map;
 
 public class Data {
 
+
+    /**
+     * Level 1: Course ID
+     * Level 2: number of points
+     * Level 3: number of people that put that many points
+     */
+    private Map<String, Map<Integer, Integer>> coursePointsData;
     private Map<Integer, List<String>> data;
 
     public Data() {
@@ -21,7 +28,7 @@ public class Data {
 
     // Using apache.poi.ooxml.scemas
     public Map<Integer, List<String>> readJExcel(String fileLocation, int fileNumber)
-            throws IOException, BiffException, InvalidFormatException {
+            throws IOException, InvalidFormatException {
 
         //FileInputStream file = new FileInputStream(fileLocation);
         XSSFWorkbook workbook = new XSSFWorkbook(new File(fileLocation));
@@ -80,7 +87,7 @@ public class Data {
         output = sheet.getRow(1).getCell(2).getStringCellValue();
 
         String id = "";
-        for (int i = 12; i <= 17; i++) id += output.toCharArray()[i];
+        for (int i = 11; i <= 15; i++) id += output.toCharArray()[i];
         return id;
     }
 
@@ -91,13 +98,13 @@ public class Data {
 
     public static void main(String[] args) throws IOException {
         try {
-            Data analysis = new Data();
-            String url = "./src/CP222 - Projet/2020-11-19 - Course Demand and Point Distribution.xlsx", course; int block;
-            course = analysis.getCourseName(url, 1);
-            System.out.println(course);
-            analysis.readJExcel("./src/CP222 - Projet/2020-11-19 - Course Demand and Point Distribution.xlsx", 0);
+                Data analysis = new Data();
+                String url = "./src/CP222 - Projet/2020-11-19 - Course Demand and Point Distribution.xlsx", course; int block;
+                course = analysis.getCourseName(url, 0);
+                System.out.println(course);
+            //analysis.readJExcel("./src/CP222 - Projet/2020-11-19 - Course Demand and Point Distribution.xlsx", 0);
             //System.out.println(analysis.getPrintData());
-        } catch (IOException | InvalidFormatException | BiffException e) {
+        } catch (IOException | InvalidFormatException e) {
             throw new RuntimeException(e);
         }/*
 
