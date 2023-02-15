@@ -23,6 +23,7 @@ public class Data {
 
     public Data() {
         data = new HashMap<>();
+        coursePointsData = new HashMap<>();
     }
 
     public Map<String, Map<Integer, Integer>> getCoursePointsData() {
@@ -66,6 +67,27 @@ public class Data {
         return data;
     }
 
+    public void addToCoursePointsData(String fileLocation, int fileNumber) throws IOException, InvalidFormatException {
+        String name = getCourseName(fileLocation, fileNumber);
+        coursePointsData.put(name, new HashMap<>());
+
+        XSSFWorkbook workbook = new XSSFWorkbook(new File(fileLocation));
+
+        Sheet sheet = workbook.getSheetAt(fileNumber);
+
+        Integer j = 0;
+        int i = 21;
+        while (true) {
+            try {
+                j = Integer.valueOf((int)sheet.getRow(i).getCell(8).getNumericCellValue());
+            } catch (NullPointerException e) {
+                break;
+            }
+            coursePointsData.get(name).put(j, Integer.valueOf((int)sheet.getRow(i).getCell(7).getNumericCellValue()));
+            i++;
+        }
+    }
+
     public String getPrintData() {
         String printData = "";
         for (Integer key : data.keySet()) {
@@ -101,10 +123,12 @@ public class Data {
 
     public static void main(String[] args) throws IOException {
         try {
-                Data analysis = new Data();
-                String url = "./src/CP222 - Projet/2020-11-19 - Course Demand and Point Distribution.xlsx", course; int block;
-                course = analysis.getCourseName(url, 0);
-                System.out.println(course);
+            Data analysis = new Data();
+            String url = "./src/CP222 - Projet/2020-11-19 - Course Demand and Point Distribution.xlsx", course; int block;
+            course = analysis.getCourseName(url, 0);
+            analysis.addToCoursePointsData(url, 0);
+            System.out.println(course);
+            System.out.println(analysis.getCoursePointsData());
             //analysis.readJExcel("./src/CP222 - Projet/2020-11-19 - Course Demand and Point Distribution.xlsx", 0);
             //System.out.println(analysis.getPrintData());
         } catch (IOException | InvalidFormatException e) {
