@@ -1,3 +1,6 @@
+
+//this class might be unnecessary
+// don't need to work on it
 public class Course{
     public String getCourseID(){
         return "";
