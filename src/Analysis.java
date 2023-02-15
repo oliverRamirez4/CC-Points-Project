@@ -6,7 +6,9 @@ import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 
 import java.io.File;
+import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.ObjectOutputStream;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -78,4 +80,15 @@ public class Analysis {
             throw new RuntimeException(e);
         }
     }
+
+//    copyWordCounter wordCounter = new copyWordCounter();
+//
+//    FileOutputStream fileOut = new FileOutputStream("Data.ser");
+//    ObjectOutputStream out = new ObjectOutputStream(fileOut);
+//        out.writeObject(wordCounter.wordMapBi);
+//        out.writeObject(wordCounter.wordMapUni);
+//        out.close();
+//        fileOut.close();
+//
+//        System.out.println("object info saved");
 }
