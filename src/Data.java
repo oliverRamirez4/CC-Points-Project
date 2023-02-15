@@ -31,6 +31,7 @@ public class Data {
     }
 
     // Using apache.poi.ooxml.scemas
+                                        // NOT BEING USED
     public Map<Integer, List<String>> readJExcel(String fileLocation, int fileNumber)
             throws IOException, InvalidFormatException {
 
@@ -67,6 +68,7 @@ public class Data {
         return data;
     }
 
+    // Adds the course points to the Data file
     public void addToCoursePointsData(String fileLocation, int fileNumber) throws IOException, InvalidFormatException {
         String name = getCourseName(fileLocation, fileNumber);
         coursePointsData.put(name, new HashMap<>());
