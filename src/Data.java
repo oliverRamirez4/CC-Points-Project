@@ -114,7 +114,22 @@ public class Data {
         output = sheet.getRow(1).getCell(2).getStringCellValue();
 
         String id = "";
-        for (int i = 11; i <= 18; i++) id += output.toCharArray()[i];
+        for (int i = 11; i <= 15; i++) id += output.toCharArray()[i];
+        return id;
+    }
+
+    //This function allows you to get the numbers of courses.
+    public String getCourseNumber(String fileLocation, int fileNumber) throws IOException, InvalidFormatException {
+        String output;
+
+        XSSFWorkbook workbook = new XSSFWorkbook(new File(fileLocation));
+
+        Sheet sheet = workbook.getSheetAt(fileNumber);
+
+        output = sheet.getRow(1).getCell(2).getStringCellValue();
+
+        String id = "";
+        for (int i = 17; i <= 18; i++) id += output.toCharArray()[i];
         return id;
     }
 
@@ -126,10 +141,12 @@ public class Data {
     public static void main(String[] args) throws IOException {
         try {
             Data analysis = new Data();
-            String url = "./src/CP222 - Projet/2020-11-19 - Course Demand and Point Distribution.xlsx", course; int block;
-            course = analysis.getCourseName(url, 0);
+            String url = "./src/CP222 - Projet/2020-11-19 - Course Demand and Point Distribution.xlsx", courseName, courseNumber; int block;
+            courseName = analysis.getCourseName(url, 0);
+            courseNumber = analysis.getCourseNumber(url, 0);
             analysis.addToCoursePointsData(url, 0);
-            System.out.println(course);
+            System.out.println(courseName);
+            System.out.println(courseNumber);
             System.out.println(analysis.getCoursePointsData());
             //analysis.readJExcel("./src/CP222 - Projet/2020-11-19 - Course Demand and Point Distribution.xlsx", 0);
             //System.out.println(analysis.getPrintData());
