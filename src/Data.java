@@ -114,7 +114,7 @@ public class Data {
         output = sheet.getRow(1).getCell(2).getStringCellValue();
 
         String id = "";
-        for (int i = 11; i <= 15; i++) id += output.toCharArray()[i];
+        for (int i = 11; i <= 18; i++) id += output.toCharArray()[i];
         return id;
     }
 
