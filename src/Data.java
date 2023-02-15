@@ -14,10 +14,11 @@ public class Data {
 
     /**
      * Level 1: Course ID
-     * Level 2: number of points
-     * Level 3: number of people that put that many points
+     * Level 2: Block number
+     * Level 3: number of points
+     * Level 4: number of people that put that many points
      */
-    private Map<String, Map<Integer, Integer>> coursePointsData;
+    private Map<String, Map<String, Map<Integer, Integer>>> coursePointsData;
     private Map<Integer, List<String>> data;
 
     XSSFWorkbook workbook;
@@ -28,7 +29,7 @@ public class Data {
         workbook = new XSSFWorkbook(new File(fileLocation));
     }
 
-    public Map<String, Map<Integer, Integer>> getCoursePointsData() {
+    public Map<String, Map<String, Map<Integer, Integer>>> getCoursePointsData() {
         return coursePointsData;
     }
 
@@ -72,7 +73,9 @@ public class Data {
     // Adds the course points to the Data file
     public void addToCoursePointsData(int fileNumber) throws IOException, InvalidFormatException {
         String name = getCourseID(fileNumber);
+        String block = getCourseBlock(fileNumber);
         coursePointsData.put(name, new HashMap<>());
+        coursePointsData.get(name).put(block, new HashMap<>());
 
         Sheet sheet = workbook.getSheetAt(fileNumber);
 
@@ -84,7 +87,7 @@ public class Data {
             } catch (NullPointerException e) {
                 break;
             }
-            coursePointsData.get(name).put(j, Integer.valueOf((int)sheet.getRow(i).getCell(7).getNumericCellValue()));
+            coursePointsData.get(name).get(block).put(j, Integer.valueOf((int)sheet.getRow(i).getCell(7).getNumericCellValue()));
             i++;
         }
     }
