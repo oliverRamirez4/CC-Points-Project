@@ -19,7 +19,7 @@ public class Window {
         topFrame.setTitle("Colorado College Point Calculator");
 
         //create the JPanel and add it to the screen
-        JPanel panel=new JPanel();
+        JPanel panel = new JPanel();
         panel.setBackground(Color.LIGHT_GRAY);
         topFrame.add(panel);
 
@@ -27,9 +27,9 @@ public class Window {
 
 
         //this combo box will have a drop down menu of all of the classes
-        String[] classList=new String[10];//place filler until we have all the classes
+        String[] classList = new String[10];//place filler until we have all the classes
         classList[0]="Hi this is the box";
-        JComboBox classSelector=new JComboBox(classList);
+        JComboBox classSelector = new JComboBox(classList);
 
         panel.add(classSelector);
 
