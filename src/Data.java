@@ -13,7 +13,6 @@ import java.util.Map;
 
 public class Data {
 
-
     /**
      * Level 1: Course ID
      * Level 2: number of points
@@ -24,6 +23,10 @@ public class Data {
 
     public Data() {
         data = new HashMap<>();
+    }
+
+    public Map<String, Map<Integer, Integer>> getCoursePointsData() {
+        return coursePointsData;
     }
 
     // Using apache.poi.ooxml.scemas
