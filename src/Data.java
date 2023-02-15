@@ -1,4 +1,3 @@
-import jxl.read.biff.BiffException;
 import org.apache.poi.openxml4j.exceptions.InvalidFormatException;
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.Row;
@@ -21,9 +20,12 @@ public class Data {
     private Map<String, Map<Integer, Integer>> coursePointsData;
     private Map<Integer, List<String>> data;
 
-    public Data() {
+    XSSFWorkbook workbook;
+
+    public Data(String fileLocation) throws IOException, InvalidFormatException {
         data = new HashMap<>();
         coursePointsData = new HashMap<>();
+        workbook = new XSSFWorkbook(new File(fileLocation));
     }
 
     public Map<String, Map<Integer, Integer>> getCoursePointsData() {
@@ -32,11 +34,10 @@ public class Data {
 
     // Using apache.poi.ooxml.scemas
                                         // NOT BEING USED
-    public Map<Integer, List<String>> readJExcel(String fileLocation, int fileNumber)
+    public Map<Integer, List<String>> readJExcel(int fileNumber)
             throws IOException, InvalidFormatException {
 
         //FileInputStream file = new FileInputStream(fileLocation);
-        XSSFWorkbook workbook = new XSSFWorkbook(new File(fileLocation));
 
         Sheet sheet = workbook.getSheetAt(fileNumber);
 
@@ -69,11 +70,9 @@ public class Data {
     }
 
     // Adds the course points to the Data file
-    public void addToCoursePointsData(String fileLocation, int fileNumber) throws IOException, InvalidFormatException {
-        String name = getCourseName(fileLocation, fileNumber);
+    public void addToCoursePointsData(int fileNumber) throws IOException, InvalidFormatException {
+        String name = getCourseID(fileNumber);
         coursePointsData.put(name, new HashMap<>());
-
-        XSSFWorkbook workbook = new XSSFWorkbook(new File(fileLocation));
 
         Sheet sheet = workbook.getSheetAt(fileNumber);
 
@@ -104,10 +103,8 @@ public class Data {
     }
 
     //This function allows you to get the names of courses.
-    public String getCourseName(String fileLocation, int fileNumber) throws IOException, InvalidFormatException {
+    public String getCourseID(int fileNumber) throws IOException, InvalidFormatException {
         String output;
-
-        XSSFWorkbook workbook = new XSSFWorkbook(new File(fileLocation));
 
         Sheet sheet = workbook.getSheetAt(fileNumber);
 
@@ -119,10 +116,8 @@ public class Data {
     }
 
     //This function allows you to get the numbers of courses.
-    public String getCourseNumber(String fileLocation, int fileNumber) throws IOException, InvalidFormatException {
+    public String getCourseBlock(int fileNumber) throws IOException, InvalidFormatException {
         String output;
-
-        XSSFWorkbook workbook = new XSSFWorkbook(new File(fileLocation));
 
         Sheet sheet = workbook.getSheetAt(fileNumber);
 
@@ -130,6 +125,10 @@ public class Data {
 
         String id = "";
         for (int i = 17; i <= 18; i++) id += output.toCharArray()[i];
+
+        //If it's only one class, return the block. If it is multiple blocks, return the block range
+        if (id.toCharArray()[0] == id.toCharArray()[1]) id = String.valueOf(id.charAt(0));
+        else { String temp = ""; temp += (id.charAt(0) + "-" + id.charAt(1)); id = temp; }
         return id;
     }
 
@@ -140,14 +139,18 @@ public class Data {
 
     public static void main(String[] args) throws IOException {
         try {
-            Data analysis = new Data();
-            String url = "./src/CP222 - Projet/2020-11-19 - Course Demand and Point Distribution.xlsx", courseName, courseNumber; int block;
-            courseName = analysis.getCourseName(url, 0);
-            courseNumber = analysis.getCourseNumber(url, 0);
-            analysis.addToCoursePointsData(url, 0);
-            System.out.println(courseName);
-            System.out.println(courseNumber);
-            System.out.println(analysis.getCoursePointsData());
+            String url = "./src/CP222 - Projet/2020-11-19 - Course Demand and Point Distribution.xlsx", courseID, courseBlock; int block;
+            Data analysis = new Data(url);
+            for (int i = 0; i < 10; i++) {
+                courseID = analysis.getCourseID(i);
+                courseBlock = analysis.getCourseBlock(i);
+                analysis.addToCoursePointsData(i);
+                System.out.println(courseID);
+                System.out.println(courseBlock);
+                System.out.println(analysis.getCoursePointsData());
+                System.out.println();
+            }
+
             //analysis.readJExcel("./src/CP222 - Projet/2020-11-19 - Course Demand and Point Distribution.xlsx", 0);
             //System.out.println(analysis.getPrintData());
         } catch (IOException | InvalidFormatException e) {
