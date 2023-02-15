@@ -21,7 +21,7 @@ public class Data {
     private Map<String, Map<String, Map<Integer, Integer>>> coursePointsData;
     private Map<Integer, List<String>> data;
 
-    XSSFWorkbook workbook;
+    public XSSFWorkbook workbook;
 
     public Data(String fileLocation) throws IOException, InvalidFormatException {
         data = new HashMap<>();
@@ -114,7 +114,9 @@ public class Data {
         output = sheet.getRow(1).getCell(2).getStringCellValue();
 
         String id = "";
-        for (int i = 11; i <= 15; i++) id += output.toCharArray()[i];
+        try {
+            for (int i = 11; i <= 15; i++) id += output.toCharArray()[i];
+        } catch (ArrayIndexOutOfBoundsException a) {;}
         return id;
     }
 
@@ -127,11 +129,13 @@ public class Data {
         output = sheet.getRow(1).getCell(2).getStringCellValue();
 
         String id = "";
-        for (int i = 17; i <= 18; i++) id += output.toCharArray()[i];
+        try {
+            for (int i = 17; i <= 18; i++) id += output.toCharArray()[i];
 
-        //If it's only one class, return the block. If it is multiple blocks, return the block range
-        if (id.toCharArray()[0] == id.toCharArray()[1]) id = String.valueOf(id.charAt(0));
-        else { String temp = ""; temp += (id.charAt(0) + "-" + id.charAt(1)); id = temp; }
+            //If it's only one class, return the block. If it is multiple blocks, return the block range
+            if (id.toCharArray()[0] == id.toCharArray()[1]) id = String.valueOf(id.charAt(0));
+            else { String temp = ""; temp += (id.charAt(0) + "-" + id.charAt(1)); id = temp; }
+        } catch (ArrayIndexOutOfBoundsException a) {;}
         return id;
     }
 
@@ -144,13 +148,13 @@ public class Data {
         try {
             String url = "./src/CP222 - Projet/2020-11-19 - Course Demand and Point Distribution.xlsx", courseID, courseBlock; int block;
             Data analysis = new Data(url);
-            for (int i = 0; i < 10; i++) {
+            for (int i = 0; i < analysis.workbook.getNumberOfSheets(); i++) {
                 courseID = analysis.getCourseID(i);
                 courseBlock = analysis.getCourseBlock(i);
-                analysis.addToCoursePointsData(i);
+                //analysis.addToCoursePointsData(i);
                 System.out.println(courseID);
                 System.out.println(courseBlock);
-                System.out.println(analysis.getCoursePointsData());
+                //System.out.println(analysis.getCoursePointsData());
                 System.out.println();
             }
 
