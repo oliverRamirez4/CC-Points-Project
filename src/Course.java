@@ -7,5 +7,9 @@ public class Course{
         return -1;
     }
 
+    public int getBlockNumber(){
+        return -1;
+    }
+
 
 }
