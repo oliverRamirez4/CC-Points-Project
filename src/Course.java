@@ -3,4 +3,9 @@ public class Course{
         return "";
     }
 
+    public int getMinPoints(){
+        return -1;
+    }
+
+
 }
