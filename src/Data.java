@@ -5,10 +5,7 @@ import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 
 import java.io.*;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 public class Data {
 
@@ -224,6 +221,20 @@ public class Data {
         return data;
     }
 
+    public String[] getCourseList(Data data){
+        Set<String> setOfString = data.getMinMaxPoints().keySet();
+        String[] courses = new String[setOfString.size()];
+
+        // Copy elements from set to string array
+        // using advanced for loop
+        int index = 0;
+        for (String str : setOfString)
+            courses[index++] = str;
+
+        // return the formed String[]
+        return courses;
+    }
+
 
 
     public static void main(String[] args) throws IOException {
@@ -245,9 +256,11 @@ public class Data {
                 //out.close();
                 //fileOut.close();
 
-                System.out.println(dataMain.getPrintableMinMaxPointsData());
-
+                //System.out.println(dataMain.getPrintableMinMaxPointsData());
             }
+
+            System.out.println(Arrays.toString(dataMain.getCourseList(dataMain)));
+
 
             /*Data analysis = new Data(url);
             for (int i = 0; i < analysis.workbook.getNumberOfSheets(); i++) {
