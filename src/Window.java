@@ -49,7 +49,7 @@ public class Window {
                 throw new RuntimeException(e);
             }
         }
-        courses = data.getCourseList(data);
+        courses = data.getCourseList();
         classSelector = new JComboBox(courses);
 
 

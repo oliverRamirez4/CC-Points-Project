@@ -25,6 +25,13 @@ public class Data {
      */
     private Map<String, Map<String, List<Integer>>> minMaxPoints;
 
+    /**
+     * Level 1: Semester
+     * Level 2: Year
+     * Level 3: Data
+     */
+    public Map<String, Map<String, Course>> courseData;
+
     public XSSFWorkbook workbook;
 
     public Data(String fileLocation) throws IOException, InvalidFormatException {
@@ -32,6 +39,14 @@ public class Data {
         coursePointsData = new HashMap<>();
         minMaxPoints = new HashMap<>();
         workbook = new XSSFWorkbook(new File(fileLocation));
+        courseData = new HashMap<>();
+    }
+
+    public Data() {
+        data = new HashMap<>();
+        coursePointsData = new HashMap<>();
+        minMaxPoints = new HashMap<>();
+        courseData = new HashMap<>();
     }
 
     public Map<String, Map<String, Map<Integer, Integer>>> getCoursePointsData() {
@@ -221,27 +236,56 @@ public class Data {
         return data;
     }
 
-    public String[] getCourseList(Data data){
-        Set<String> setOfString = data.getMinMaxPoints().keySet();
-        String[] courses = new String[setOfString.size()];
+    public String[] getCourseList(){
+        Set<String> map = null;
 
-        // Copy elements from set to string array
-        // using advanced for loop
-        int index = 0;
-        for (String str : setOfString)
-            courses[index++] = str;
+        // Deserialize the HashMap
+        try (FileInputStream fileIn = new FileInputStream("./src/CourseCount/2021F.ser");
+             ObjectInputStream in = new ObjectInputStream(fileIn)) {
+            map = ((HashMap<String, HashMap<Integer, Integer>>) in.readObject()).keySet();
+        } catch (IOException | ClassNotFoundException e) {
+            e.printStackTrace();
+        }
 
-        // return the formed String[]
-        return courses;
+        return (String[]) map.toArray();
+    }
+
+    /**
+     * @param courseID
+     * @param block
+     * @param semester (format XXXXN with XXXX being the year and N being either S (Spring) or F (Fall)
+     * @return map
+     */
+    public HashMap<String, HashMap<Integer, Integer>> getFileData(String courseID, String block, String semester) {
+        HashMap<String, HashMap<Integer, Integer>> map = null;
+
+        // Deserialize the HashMap
+        try (FileInputStream fileIn = new FileInputStream("./src/usableData/" + semester + "/" + courseID + block + ".ser");
+             ObjectInputStream in = new ObjectInputStream(fileIn)) {
+            map = (HashMap<String, HashMap<Integer, Integer>>) in.readObject();
+        } catch (IOException | ClassNotFoundException e) {
+            e.printStackTrace();
+        }
+
+        return map;
     }
 
 
 
-    public static void main(String[] args) throws IOException {
-        try {
-            String url = "./src/CP222 - Projet/2020-11-19 - Course Demand and Point Distribution.xlsx", courseID, courseBlock; int block;
+    public static void main(String[] args) throws IOException, InvalidFormatException {
+
+
+
+        /*try {
+            String url = "./src/CP222 - Projet/2021-05-03 - Course Demand and Point Distribution.xlsx", courseID, courseBlock; int block;
 
             Data dataMain = new Data(url);
+
+        } catch (IOException | InvalidFormatException e) {
+            throw new RuntimeException(e);
+        }*/
+
+        /*Data dataMain = new Data(url);
             for (int i = 0; i < dataMain.workbook.getNumberOfSheets(); i++) {
                 courseID = dataMain.getCourseID(i);
                 courseBlock = dataMain.getCourseBlock(i);
@@ -259,7 +303,7 @@ public class Data {
                 //System.out.println(dataMain.getPrintableMinMaxPointsData());
             }
 
-            System.out.println(Arrays.toString(dataMain.getCourseList(dataMain)));
+            System.out.println(Arrays.toString(dataMain.getCourseList(dataMain)));*/
 
 
             /*Data analysis = new Data(url);
@@ -272,42 +316,217 @@ public class Data {
                 //System.out.println(analysis.getCoursePointsData());
                 System.out.println();
             }*/
-            /*Data dataMain = new Data(url);
 
+
+        /*String url = "./src/CP222 - Projet/2021-05-03 - Course Demand and Point Distribution.xlsx", courseID, courseBlock; int block;
+        Data dataMain = new Data(url);
             for (int i = 0; i < dataMain.workbook.getNumberOfSheets(); i++) {
                 courseID = dataMain.getCourseID(i);
                 courseBlock = dataMain.getCourseBlock(i);
-                FileOutputStream fileOut = new FileOutputStream("src/usableData/2021S/" + courseID + courseBlock + ".ser");
+                FileOutputStream fileOut = new FileOutputStream("src/usableData/2021F/" + courseID + courseBlock + ".ser");
                 ObjectOutputStream out = new ObjectOutputStream(fileOut);
                 try {
                     dataMain.addToCoursePointsData(i);
                 } catch (InvalidFormatException e){
                     throw new RuntimeException(e);
                 }
-                out.writeObject(dataMain.getCoursePointsData());
+                out.writeObject(dataMain.getCoursePointsData().get(courseID).get(courseBlock));
                 out.close();
                 fileOut.close();
 
                 System.out.println("object info saved");
 
-            }*/
-            //analysis.readJExcel("./src/CP222 - Projet/2020-11-19 - Course Demand and Point Distribution.xlsx", 0);
-            //System.out.println(analysis.getPrintData());
-        } catch (IOException | InvalidFormatException e) {
-            throw new RuntimeException(e);
-        }/*
+            }
+            System.out.println("2021F complete");
+
+        url = "./src/CP222 - Projet/2020-11-19 - Course Demand and Point Distribution.xlsx";
+        dataMain = new Data(url);
+
+        for (int i = 0; i < dataMain.workbook.getNumberOfSheets(); i++) {
+            courseID = dataMain.getCourseID(i);
+            courseBlock = dataMain.getCourseBlock(i);
+            FileOutputStream fileOut = new FileOutputStream("src/usableData/2021S/" + courseID + courseBlock + ".ser");
+            ObjectOutputStream out = new ObjectOutputStream(fileOut);
+            try {
+                dataMain.addToCoursePointsData(i);
+            } catch (InvalidFormatException e){
+                throw new RuntimeException(e);
+            }
+            out.writeObject(dataMain.getCoursePointsData().get(courseID).get(courseBlock));
+            out.close();
+            fileOut.close();
+
+            System.out.println("object info saved");
+
+        }
+        System.out.println("2021S complete");
+
+            url = "./src/CP222 - Projet/2021-12-07 - Course Demand and Point Distribution.xlsx";
+            dataMain = new Data(url);
+
+            for (int i = 0; i < dataMain.workbook.getNumberOfSheets(); i++) {
+                courseID = dataMain.getCourseID(i);
+                courseBlock = dataMain.getCourseBlock(i);
+                FileOutputStream fileOut = new FileOutputStream("src/usableData/2022S/" + courseID + courseBlock + ".ser");
+                ObjectOutputStream out = new ObjectOutputStream(fileOut);
+                try {
+                    dataMain.addToCoursePointsData(i);
+                } catch (InvalidFormatException e){
+                    throw new RuntimeException(e);
+                }
+                out.writeObject(dataMain.getCoursePointsData().get(courseID).get(courseBlock));
+                out.close();
+                fileOut.close();
+
+                System.out.println("object info saved");
+
+            }
+            System.out.println("2022S complete");
+
+            url = "./src/CP222 - Projet/2022-05-03 - Fall 2022 - Course Demand and Point Distribution.xlsx";
+            dataMain = new Data(url);
+
+            for (int i = 0; i < dataMain.workbook.getNumberOfSheets(); i++) {
+                courseID = dataMain.getCourseID(i);
+                courseBlock = dataMain.getCourseBlock(i);
+                FileOutputStream fileOut = new FileOutputStream("src/usableData/2022F/" + courseID + courseBlock + ".ser");
+                ObjectOutputStream out = new ObjectOutputStream(fileOut);
+                try {
+                    dataMain.addToCoursePointsData(i);
+                } catch (InvalidFormatException e){
+                    throw new RuntimeException(e);
+                }
+                out.writeObject(dataMain.getCoursePointsData().get(courseID).get(courseBlock));
+                out.close();
+                fileOut.close();
+
+                System.out.println("object info saved");
+
+            }
+            System.out.println("2022F complete");
+
+            url = "./src/CP222 - Projet/2022-12-06 - Course Demand and Point Distribution.xlsx";
+            dataMain = new Data(url);
+
+            for (int i = 0; i < dataMain.workbook.getNumberOfSheets(); i++) {
+                courseID = dataMain.getCourseID(i);
+                courseBlock = dataMain.getCourseBlock(i);
+                FileOutputStream fileOut = new FileOutputStream("src/usableData/2023S/" + courseID + courseBlock + ".ser");
+                ObjectOutputStream out = new ObjectOutputStream(fileOut);
+                try {
+                    dataMain.addToCoursePointsData(i);
+                } catch (InvalidFormatException e){
+                    throw new RuntimeException(e);
+                }
+                out.writeObject(dataMain.getCoursePointsData().get(courseID).get(courseBlock));
+                out.close();
+                fileOut.close();
+
+                System.out.println("object info saved");
+
+            }
+            System.out.println("2023S complete");*/
+
+        /*String url = "./src/CP222 - Projet/2021-05-03 - Course Demand and Point Distribution.xlsx", courseID, courseBlock; int block;
+        Data dataMain = new Data(url);
+
+        FileOutputStream fileOut = new FileOutputStream("src/CourseCount/2021F.ser");
+        ObjectOutputStream out = new ObjectOutputStream(fileOut);
+        for (int i = 0; i < dataMain.workbook.getNumberOfSheets(); i++) {
+            try {
+                dataMain.addToMinMaxPointsData(i);
+            } catch (InvalidFormatException e) {
+                throw new RuntimeException(e);
+            }
+        }
+        out.writeObject(dataMain.getMinMaxPoints());
+        out.close();
+        fileOut.close();
+
+        System.out.println("object info saved");
+        System.out.println("2021F complete");
+
+        url = "./src/CP222 - Projet/2020-11-19 - Course Demand and Point Distribution.xlsx";
+        dataMain = new Data(url);
+
+        fileOut = new FileOutputStream("src/CourseCount/2021S.ser");
+        out = new ObjectOutputStream(fileOut);
+        for (int i = 0; i < dataMain.workbook.getNumberOfSheets(); i++) {
+            try {
+                dataMain.addToMinMaxPointsData(i);
+            } catch (InvalidFormatException e) {
+                throw new RuntimeException(e);
+            }
+        }
+        out.writeObject(dataMain.getMinMaxPoints());
+        out.close();
+        fileOut.close();
+
+        System.out.println("object info saved");
+        System.out.println("2021S complete");
 
 
+        url = "./src/CP222 - Projet/2021-12-07 - Course Demand and Point Distribution.xlsx";
+        dataMain = new Data(url);
 
-        HashMap<String, Integer> map = null;
+        fileOut = new FileOutputStream("src/CourseCount/2022S.ser");
+        out = new ObjectOutputStream(fileOut);
+        for (int i = 0; i < dataMain.workbook.getNumberOfSheets(); i++) {
+            try {
+                dataMain.addToMinMaxPointsData(i);
+            } catch (InvalidFormatException e) {
+                throw new RuntimeException(e);
+            }
+        }
+        out.writeObject(dataMain.getMinMaxPoints());
+        out.close();
+        fileOut.close();
 
-        // Deserialize the HashMap
-        try (FileInputStream fileIn = new FileInputStream("Data.ser");
-             ObjectInputStream in = new ObjectInputStream(fileIn)) {
-            map = (HashMap<String, Integer>) in.readObject();
-        } catch (IOException | ClassNotFoundException e) {
-            e.printStackTrace();
-        }*/
+        System.out.println("object info saved");
+        System.out.println("2022S complete");
+
+
+        url = "./src/CP222 - Projet/2022-05-03 - Fall 2022 - Course Demand and Point Distribution.xlsx";
+        dataMain = new Data(url);
+
+        fileOut = new FileOutputStream("src/CourseCount/2022F.ser");
+        out = new ObjectOutputStream(fileOut);
+        for (int i = 0; i < dataMain.workbook.getNumberOfSheets(); i++) {
+            try {
+                dataMain.addToMinMaxPointsData(i);
+            } catch (InvalidFormatException e) {
+                throw new RuntimeException(e);
+            }
+        }
+        out.writeObject(dataMain.getMinMaxPoints());
+        out.close();
+        fileOut.close();
+
+        System.out.println("object info saved");
+        System.out.println("2022F complete");
+
+
+        url = "./src/CP222 - Projet/2022-12-06 - Course Demand and Point Distribution.xlsx";
+        dataMain = new Data(url);
+
+        fileOut = new FileOutputStream("src/CourseCount/2023S.ser");
+        out = new ObjectOutputStream(fileOut);
+        for (int i = 0; i < dataMain.workbook.getNumberOfSheets(); i++) {
+            try {
+                dataMain.addToMinMaxPointsData(i);
+            } catch (InvalidFormatException e) {
+                throw new RuntimeException(e);
+            }
+        }
+        out.writeObject(dataMain.getMinMaxPoints());
+        out.close();
+        fileOut.close();
+
+        System.out.println("object info saved");
+        System.out.println("2023S complete");*/
+
+        //analysis.readJExcel("./src/CP222 - Projet/2020-11-19 - Course Demand and Point Distribution.xlsx", 0);
+        //System.out.println(analysis.getPrintData());
     }
 
 }
