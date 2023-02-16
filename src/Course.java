@@ -1,7 +1,12 @@
+import javax.swing.*;
 
 //this class might be unnecessary
 // don't need to work on it
-public class Course{
+public class Course extends JPanel {
+
+    public Course() {
+    }
+
     public String getCourseID(){
         return "";
     }

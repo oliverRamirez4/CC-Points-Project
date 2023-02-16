@@ -19,19 +19,54 @@ public class Window {
         topFrame.setTitle("Colorado College Point Calculator");
 
         //create the JPanel and add it to the screen
-        JPanel panel = new JPanel();
-        panel.setBackground(Color.LIGHT_GRAY);
-        topFrame.add(panel);
+        JPanel startPanel = new JPanel();
+        startPanel.setBackground(Color.LIGHT_GRAY);
+        startPanel.setLayout(new BoxLayout(startPanel,BoxLayout.PAGE_AXIS));
+        topFrame.add(startPanel);
+
+
+        //create the JPanel that will go to course information
+        Course coursePanel=new Course();
+        coursePanel.setBackground(Color.LIGHT_GRAY);
+
+
+        //create a JLabel containing the CC Logo
+
+
+
+        JLabel CCLogo = new JLabel(new ImageIcon("src/CC-Logo-Stacked.png"));
+        startPanel.add(CCLogo);
+
+
+
+
+
+
+
+
+
+
+
 
 
 
 
         //this combo box will have a drop down menu of all of the classes
-        String[] classList = new String[10];//place filler until we have all the classes
-        classList[0]="Hi this is the box";
+        String[] classList = new String[]{"choose your course","cp122","ap123","dp124"};//place filler until we have all the classes
         JComboBox classSelector = new JComboBox(classList);
+        startPanel.add(classSelector);
 
-        panel.add(classSelector);
+        JButton goButton = new JButton("go");
+        startPanel.add(goButton);
+
+        goButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                startPanel.setVisible(false);
+                topFrame.add(coursePanel);
+
+            }
+        });
 
         topFrame.setVisible(true);
 
