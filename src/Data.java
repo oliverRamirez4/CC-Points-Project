@@ -147,7 +147,7 @@ public class Data {
     public static void main(String[] args) throws IOException {
         try {
             String url = "./src/CP222 - Projet/2020-11-19 - Course Demand and Point Distribution.xlsx", courseID, courseBlock; int block;
-            Data analysis = new Data(url);
+            /*Data analysis = new Data(url);
             for (int i = 0; i < analysis.workbook.getNumberOfSheets(); i++) {
                 courseID = analysis.getCourseID(i);
                 courseBlock = analysis.getCourseBlock(i);
@@ -156,31 +156,33 @@ public class Data {
                 System.out.println(courseBlock);
                 //System.out.println(analysis.getCoursePointsData());
                 System.out.println();
-            }
+            }*/
+            Data dataMain = new Data(url);
 
+            for (int i = 0; i < dataMain.workbook.getNumberOfSheets(); i++) {
+                courseID = dataMain.getCourseID(i);
+                courseBlock = dataMain.getCourseBlock(i);
+                FileOutputStream fileOut = new FileOutputStream("src/usableData/2021S/" + courseID + courseBlock + ".ser");
+                ObjectOutputStream out = new ObjectOutputStream(fileOut);
+                try {
+                    dataMain.addToCoursePointsData(i);
+                } catch (InvalidFormatException e){
+                    throw new RuntimeException(e);
+                }
+                out.writeObject(dataMain.getCoursePointsData());
+                out.close();
+                fileOut.close();
+
+                System.out.println("object info saved");
+
+            }
             //analysis.readJExcel("./src/CP222 - Projet/2020-11-19 - Course Demand and Point Distribution.xlsx", 0);
             //System.out.println(analysis.getPrintData());
         } catch (IOException | InvalidFormatException e) {
             throw new RuntimeException(e);
         }/*
 
-        Data dataMain = new Data();
 
-        for (int i = 0; i < 10; i++) {
-            FileOutputStream fileOut = new FileOutputStream("src/usableData/2021S/Data" + i + ".ser");
-            ObjectOutputStream out = new ObjectOutputStream(fileOut);
-            try {
-                dataMain.readJExcel(url, i);
-            } catch (BiffException | InvalidFormatException e){
-                throw new RuntimeException(e);
-            }
-            out.writeObject(dataMain.getData());
-            out.close();
-            fileOut.close();
-
-            System.out.println("object info saved");
-
-        }
 
         HashMap<String, Integer> map = null;
 
