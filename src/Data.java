@@ -236,6 +236,7 @@ public class Data {
     }
 
 
+
     public static void main(String[] args) throws IOException {
         try {
             String url = "./src/CP222 - Projet/2020-11-19 - Course Demand and Point Distribution.xlsx", courseID, courseBlock; int block;
