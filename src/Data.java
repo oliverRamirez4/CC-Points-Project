@@ -59,14 +59,15 @@ public class Data {
         minMaxPoints = new HashMap<>();
         courseData = new HashMap<>();
         allData = new HashMap<>();
-        //allData = readAllFiles();
+        allData = readAllFiles();
     }
 
     public HashMap<String, HashMap<String, Course>> readAllFiles() {
         HashMap<String, HashMap<String, Course>> output = new HashMap<>();
 
         for (String semester : semesters) {
-            for (String course : getCourseMinMaxList(semester).get(semester).keySet()) {
+            getCourseMinMaxList(semester);
+            for (String course : getCourseList(semester)) {
                 if (output.get(course) == null) output.put(course, new HashMap<>());
                 output.get(course).put(semester, readFile(course, semester));
             }
@@ -290,19 +291,19 @@ public class Data {
         return output.toArray(String[]::new);
     }
 
-    public Map<String, Map<String, Map<String, List<Integer>>>> getCourseMinMaxList(String semester){
-        Map<String, Map<String, Map<String, List<Integer>>>> map = null;
+    public Map<String, Map<String, List<Integer>>> getCourseMinMaxList(String semester){
+        Map<String, Map<String, List<Integer>>> map = null;
 
         // Deserialize the HashMap
         try {
             FileInputStream fileIn = new FileInputStream("./src/CourseCount/" + semester + ".ser");
             ObjectInputStream in = new ObjectInputStream(fileIn);
-            map = (Map<String, Map<String, Map<String, List<Integer>>>>) in.readObject();
+            map = (Map<String, Map<String, List<Integer>>>) in.readObject();
         } catch (IOException | ClassNotFoundException e) {
             e.printStackTrace();
         }
 
-        minMaxPoints = map;
+        minMaxPoints.put(semester, map);
 
         return map;
     }
@@ -332,13 +333,13 @@ public class Data {
     public static void main(String[] args) throws IOException, InvalidFormatException {
         Data data = new Data();
 
-        String semester = "2021F";
+        /*String semester = "2021F";
         for (String course : Data.getCourseList(semester)) {
             System.out.print(course + " : ");
             System.out.println(Data.getFileData(charsBtwn(course, 0, 4), charsBtwn(course, 5, course.length()), semester));
         }
-
-        System.out.println(data.getCourseMinMaxList(semester));
+        data.getCourseMinMaxList(semester);*/
+        System.out.println(data.allData);
 
 
         /*try {

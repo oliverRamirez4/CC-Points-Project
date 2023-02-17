@@ -30,6 +30,11 @@ public class Course extends JPanel {
         pointBids = null;
     }
 
+    @Override
+    public String toString() {
+        return "Course[" + getCourseID() + ", " + getBlockNumber() + ", " + getMinPoints() + "]";
+    }
+
     public String getCourseID(){
         return courseID;
     }
