@@ -1,18 +1,14 @@
-import org.apache.poi.openxml4j.exceptions.InvalidFormatException;
-
-import javax.imageio.ImageIO;
 import javax.swing.*;
+import javax.swing.border.Border;
+import javax.swing.border.LineBorder;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.awt.image.BufferedImage;
-import java.io.File;
-import java.io.IOException;
 import java.util.Arrays;
-import java.util.Set;
 
 public class Window {
     Data data;
+
     JFrame topFrame;
     JPanel startPanel;
     Course coursePanel;
@@ -23,7 +19,15 @@ public class Window {
 
     String [] courses;
 
-    public Window() throws IOException, InvalidFormatException {
+    public Window(){
+        //make Data object
+        data=new Data();
+
+
+        //what course does user select (the key)
+        //could get from actionListener
+        String courseID = "CP125"; //getUserInput();
+
 
         //create the JFrame
         topFrame = new JFrame();
@@ -31,48 +35,40 @@ public class Window {
         //create the JPanel and add it to the screen
         startPanel = new JPanel();
 
+
         //create the JPanel that will go to course information
         coursePanel=new Course();
 
         //create a JLabel containing the CC Logo
         CCLogo = new JLabel(new ImageIcon("src/CC-Logo-Stacked.png"));
-        String url = "./src/CP222 - Projet/2020-11-19 - Course Demand and Point Distribution.xlsx", courseID, courseBlock; int block;
-        data = new Data(url);
-        for (int i = 0; i < data.workbook.getNumberOfSheets(); i++) {
-            courseID = data.getCourseID(i);
-            courseBlock = data.getCourseBlock(i);
-            //FileOutputStream fileOut = new FileOutputStream("src/usableData/2021S/" + courseID + courseBlock + ".ser");
-            //ObjectOutputStream out = new ObjectOutputStream(fileOut);
-            /*try {
-                data.addToMinMaxPointsData(i, "2022F");
-            } catch (InvalidFormatException e) {
-                throw new RuntimeException(e);
-            }*/
-        }
-        courses = Data.getCourseList("2021S");
-        classSelector = new JComboBox(courses);
 
+        //need for using dropDown menu
+        //courses=data.getCourseList();
+        classList = data.getAllData().keySet().toArray(String[]::new);
+        Arrays.sort(classList);
 
-        //this combo box will have a drop down menu of all of the classes
+        classSelector=new JComboBox(classList);
 
-
-        //go Button to request info of course
-        goButton = new JButton("go");
-
+        goButton=new JButton("go");
 
     }
 
-    void Display(){
+
+
+    public void display(){
         topFrame.setSize(400, 600);
         topFrame.setVisible(true);
         topFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         topFrame.setTitle("Colorado College Point Calculator");
 
         startPanel.setBackground(Color.LIGHT_GRAY);
-        startPanel.setLayout(new BoxLayout(startPanel,BoxLayout.PAGE_AXIS));
+        startPanel.setLayout(new BoxLayout(startPanel,BoxLayout.Y_AXIS));
         topFrame.add(startPanel);
 
+
         coursePanel.setBackground(Color.LIGHT_GRAY);
+        coursePanel.setLayout(new BoxLayout(coursePanel,BoxLayout.PAGE_AXIS));
+
 
         startPanel.add(CCLogo);
 
@@ -92,9 +88,9 @@ public class Window {
         topFrame.setVisible(true);
     }
 
-    public static void main(String[] args) throws IOException, InvalidFormatException {
-
+    public static void main(String[] args) {
         Window w = new Window();
-        w.Display();
+        w.display();
     }
+
 }
