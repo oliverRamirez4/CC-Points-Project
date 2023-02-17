@@ -19,11 +19,13 @@ public class Data {
     private Map<Integer, List<String>> data;
 
     /**
-     * Level 1: Course ID
-     * Level 2: Block Number
-     * Level 3: (1) minimum points, (2) number of seats, (3) demand
+     * Level 1: Semester
+     * Level 2: Course ID
+     * Level 3: Block Number
+     * Level 4: (0) minimum points, (1) number of seats, (2) demand
      */
-    private Map<String, Map<String, List<Integer>>> minMaxPoints;
+    private Map<String, Map<String, Map<String, List<Integer>>>> minMaxPoints;
+
 
     /**
      * Level 1: Semester
@@ -33,6 +35,15 @@ public class Data {
     public Map<String, Map<String, Course>> courseData;
 
     public XSSFWorkbook workbook;
+
+    /**
+     * Level 1: Course ID
+     * Level 2: Year & Semester
+     * Level 3: Course info
+     */
+    HashMap<String, HashMap<String, Course>> allData;
+
+    public final String[] semesters = {"2021F", "2021S", "2022F", "2022S", "2023S"};
 
     public Data(String fileLocation) throws IOException, InvalidFormatException {
         data = new HashMap<>();
@@ -47,6 +58,28 @@ public class Data {
         coursePointsData = new HashMap<>();
         minMaxPoints = new HashMap<>();
         courseData = new HashMap<>();
+        allData = new HashMap<>();
+        //allData = readAllFiles();
+    }
+
+    public HashMap<String, HashMap<String, Course>> readAllFiles() {
+        HashMap<String, HashMap<String, Course>> output = new HashMap<>();
+
+        for (String semester : semesters) {
+            for (String course : getCourseMinMaxList(semester).get(semester).keySet()) {
+                if (output.get(course) == null) output.put(course, new HashMap<>());
+                output.get(course).put(semester, readFile(course, semester));
+            }
+
+        }
+
+        return output;
+    }
+
+    public Course readFile(String course, String semester) {
+        int minPoints = minMaxPoints.get(semester).get(charsBtwn(course, 0, 4)).get(charsBtwn(course, 5, course.length())).get(0);
+        Course courseUsed = new Course(charsBtwn(course, 0, 4), charsBtwn(course, 5, course.length()), minPoints, getFileData(charsBtwn(course, 0, 4), charsBtwn(course, 5, course.length()), semester).get(charsBtwn(course, 5, course.length())));
+        return courseUsed;
     }
 
     public Map<String, Map<String, Map<Integer, Integer>>> getCoursePointsData() {
@@ -113,12 +146,13 @@ public class Data {
     }
 
     // Adds the course minimum, maximum, etc. points to the Data file
-    public void addToMinMaxPointsData(int fileNumber) throws IOException, InvalidFormatException {
+    public void addToMinMaxPointsData(int fileNumber, String semester) throws IOException, InvalidFormatException {
         //Data assurance so I don't put something into nothing
         String name = getCourseID(fileNumber);
         String block = getCourseBlock(fileNumber);
-        minMaxPoints.put(name, new HashMap<>());
-        minMaxPoints.get(name).put(block, new ArrayList<>());
+        minMaxPoints.put(semester, new HashMap<>());
+        minMaxPoints.get(semester).put(name, new HashMap<>());
+        minMaxPoints.get(semester).get(name).put(block, new ArrayList<>());
 
         Sheet sheet = workbook.getSheetAt(fileNumber);
 
@@ -129,7 +163,7 @@ public class Data {
         } catch (NullPointerException n) {
             i = 0;
         }
-        minMaxPoints.get(name).get(block).add(0, i);
+        minMaxPoints.get(semester).get(name).get(block).add(0, i);
 
         //Add the number of seats
         try {
@@ -137,7 +171,7 @@ public class Data {
         } catch (NullPointerException n) {
             i = 0;
         }
-        minMaxPoints.get(name).get(block).add(1, i);
+        minMaxPoints.get(semester).get(name).get(block).add(1, i);
 
         //Add the seat demand
         try {
@@ -145,10 +179,10 @@ public class Data {
         } catch (NullPointerException n) {
             i = 0;
         }
-        minMaxPoints.get(name).get(block).add(2, i);
+        minMaxPoints.get(semester).get(name).get(block).add(2, i);
     }
 
-    public Map<String, Map<String, List<Integer>>> getMinMaxPoints() {
+    public Map<String, Map<String, Map<String, List<Integer>>>> getMinMaxPoints() {
         return minMaxPoints;
     }
 
@@ -224,7 +258,7 @@ public class Data {
         return id;
     }
 
-    private String charsBtwn(String input, int start, int end) {
+    private static String charsBtwn(String input, int start, int end) {
         String id = "";
         try {
             for (int i = start; i <= end; i++) id += input.toCharArray()[i];
@@ -236,18 +270,41 @@ public class Data {
         return data;
     }
 
-    public String[] getCourseList(){
-        Set<String> map = null;
+    public static String[] getCourseList(String semester){
+        HashMap<String, HashMap<String, HashMap<Integer, Integer>>> map = null;
 
         // Deserialize the HashMap
-        try (FileInputStream fileIn = new FileInputStream("./src/CourseCount/2021F.ser");
-             ObjectInputStream in = new ObjectInputStream(fileIn)) {
-            map = ((HashMap<String, HashMap<Integer, Integer>>) in.readObject()).keySet();
+        try {
+            FileInputStream fileIn = new FileInputStream("./src/CourseCount/" + semester + ".ser");
+            ObjectInputStream in = new ObjectInputStream(fileIn);
+            map = ((HashMap<String, HashMap<String, HashMap<Integer, Integer>>>) in.readObject());
         } catch (IOException | ClassNotFoundException e) {
             e.printStackTrace();
         }
 
-        return (String[]) map.toArray();
+        Set<String> output = new HashSet<>();
+        for (String course: map.keySet())
+            for (String block : map.get(course).keySet())
+                output.add(course + block);
+
+        return output.toArray(String[]::new);
+    }
+
+    public Map<String, Map<String, Map<String, List<Integer>>>> getCourseMinMaxList(String semester){
+        Map<String, Map<String, Map<String, List<Integer>>>> map = null;
+
+        // Deserialize the HashMap
+        try {
+            FileInputStream fileIn = new FileInputStream("./src/CourseCount/" + semester + ".ser");
+            ObjectInputStream in = new ObjectInputStream(fileIn);
+            map = (Map<String, Map<String, Map<String, List<Integer>>>>) in.readObject();
+        } catch (IOException | ClassNotFoundException e) {
+            e.printStackTrace();
+        }
+
+        minMaxPoints = map;
+
+        return map;
     }
 
     /**
@@ -256,7 +313,7 @@ public class Data {
      * @param semester (format XXXXN with XXXX being the year and N being either S (Spring) or F (Fall)
      * @return map
      */
-    public HashMap<String, HashMap<Integer, Integer>> getFileData(String courseID, String block, String semester) {
+    public static HashMap<String, HashMap<Integer, Integer>> getFileData(String courseID, String block, String semester) {
         HashMap<String, HashMap<Integer, Integer>> map = null;
 
         // Deserialize the HashMap
@@ -273,7 +330,15 @@ public class Data {
 
 
     public static void main(String[] args) throws IOException, InvalidFormatException {
+        Data data = new Data();
 
+        String semester = "2021F";
+        for (String course : Data.getCourseList(semester)) {
+            System.out.print(course + " : ");
+            System.out.println(Data.getFileData(charsBtwn(course, 0, 4), charsBtwn(course, 5, course.length()), semester));
+        }
+
+        System.out.println(data.getCourseMinMaxList(semester));
 
 
         /*try {
@@ -306,7 +371,7 @@ public class Data {
             System.out.println(Arrays.toString(dataMain.getCourseList(dataMain)));*/
 
 
-            /*Data analysis = new Data(url);
+        /*Data analysis = new Data(url);
             for (int i = 0; i < analysis.workbook.getNumberOfSheets(); i++) {
                 courseID = analysis.getCourseID(i);
                 courseBlock = analysis.getCourseBlock(i);

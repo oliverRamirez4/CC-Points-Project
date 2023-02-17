@@ -43,13 +43,13 @@ public class Window {
             courseBlock = data.getCourseBlock(i);
             //FileOutputStream fileOut = new FileOutputStream("src/usableData/2021S/" + courseID + courseBlock + ".ser");
             //ObjectOutputStream out = new ObjectOutputStream(fileOut);
-            try {
-                data.addToMinMaxPointsData(i);
+            /*try {
+                data.addToMinMaxPointsData(i, "2022F");
             } catch (InvalidFormatException e) {
                 throw new RuntimeException(e);
-            }
+            }*/
         }
-        courses = data.getCourseList();
+        courses = Data.getCourseList("2021S");
         classSelector = new JComboBox(courses);
 
 
