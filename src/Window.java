@@ -80,7 +80,10 @@ public class Window {
             @Override
             public void actionPerformed(ActionEvent e) {
                 startPanel.setVisible(false);
-                topFrame.add(coursePanel);
+                String key = (String)classSelector.getSelectedItem();
+                String semester = "2023S";
+                Course current = data.getAllData().get(key).get(semester);
+                topFrame.add(current);
 
             }
         });
