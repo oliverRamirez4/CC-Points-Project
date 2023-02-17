@@ -347,13 +347,11 @@ public class Data {
             throw new RuntimeException(e);
         }
 
-        Sheet sheet = python.getSheetAt(0);
-
         int i = 1;
 
-        for (Row row : sheet) {
+        for (Row row : python.getSheetAt(0)) {
             if (row.getRowNum() != 0) {
-                sheet.removeRow(row);
+                python.getSheetAt(0).removeRow(row);
                 i++;
             }
         }
@@ -361,14 +359,18 @@ public class Data {
         for (String course : allData.keySet()) {
             for (String semester : allData.get(course).keySet()) {
                 for (String block : allData.get(course).get(semester).keySet()) {
-                    sheet.getRow(i).getCell(0).setCellValue(course);
-                    sheet.getRow(i).getCell(1).setCellValue(block);
-                    sheet.getRow(i).getCell(2).setCellValue(charsBtwn(semester, 0, 4));
-                    sheet.getRow(i).getCell(3).setCellValue(charsBtwn(semester, 5, 5));
-                    sheet.getRow(i).getCell(4).setCellValue(minMaxPoints.get(semester).get(course).get(block).get(2));
-                    sheet.getRow(i).getCell(5).setCellValue(minMaxPoints.get(semester).get(course).get(block).get(1));
-                    sheet.getRow(i).getCell(6).setCellValue(minMaxPoints.get(semester).get(course).get(block).get(2) - minMaxPoints.get(semester).get(course).get(block).get(1));
-                    sheet.getRow(i).getCell(7).setCellValue(minMaxPoints.get(semester).get(course).get(block).get(0));
+                    try {
+                        python.getSheetAt(0).getRow(i).getCell(0).setCellValue(course);
+                        python.getSheetAt(0).getRow(i).getCell(1).setCellValue(block);
+                        python.getSheetAt(0).getRow(i).getCell(2).setCellValue(charsBtwn(semester, 0, 4));
+                        python.getSheetAt(0).getRow(i).getCell(3).setCellValue(charsBtwn(semester, 5, 5));
+                        python.getSheetAt(0).getRow(i).getCell(4).setCellValue(minMaxPoints.get(semester).get(course).get(block).get(2));
+                        python.getSheetAt(0).getRow(i).getCell(5).setCellValue(minMaxPoints.get(semester).get(course).get(block).get(1));
+                        python.getSheetAt(0).getRow(i).getCell(6).setCellValue(minMaxPoints.get(semester).get(course).get(block).get(2) - minMaxPoints.get(semester).get(course).get(block).get(1));
+                        python.getSheetAt(0).getRow(i).getCell(7).setCellValue(minMaxPoints.get(semester).get(course).get(block).get(0));
+                    } catch (NullPointerException n) {
+                        ;
+                    }
                 }
             }
             i++;
