@@ -340,8 +340,10 @@ public class Data {
     public void sendToPython() {
         Workbook python = null;
         try {
-            python = new XSSFWorkbook("src/pythonProject/classData.xlsx");
+            python = new XSSFWorkbook(new File("src/pythonProject/classData.xlsx"));
         } catch (IOException e) {
+            throw new RuntimeException(e);
+        } catch (InvalidFormatException e) {
             throw new RuntimeException(e);
         }
 
@@ -349,24 +351,36 @@ public class Data {
 
         int i = 1;
 
+        for (Row row : sheet) {
+            if (row.getRowNum() != 0) {
+                sheet.removeRow(row);
+                i++;
+            }
+        }
+
         for (String course : allData.keySet()) {
             for (String semester : allData.get(course).keySet()) {
                 for (String block : allData.get(course).get(semester).keySet()) {
-
+                    sheet.getRow(i).getCell(0).setCellValue(course);
+                    sheet.getRow(i).getCell(1).setCellValue(block);
+                    sheet.getRow(i).getCell(2).setCellValue(charsBtwn(semester, 0, 4));
+                    sheet.getRow(i).getCell(3).setCellValue(charsBtwn(semester, 5, 5));
+                    sheet.getRow(i).getCell(4).setCellValue(minMaxPoints.get(semester).get(course).get(block).get(2));
+                    sheet.getRow(i).getCell(5).setCellValue(minMaxPoints.get(semester).get(course).get(block).get(1));
+                    sheet.getRow(i).getCell(6).setCellValue(minMaxPoints.get(semester).get(course).get(block).get(2) - minMaxPoints.get(semester).get(course).get(block).get(1));
+                    sheet.getRow(i).getCell(7).setCellValue(minMaxPoints.get(semester).get(course).get(block).get(0));
                 }
-                //Course info = allData.get(course).get(semester);
-
-                //sheet.getRow(i).getCell(0).setCellValue();
             }
+            i++;
         }
     }
 
     public static void main(String[] args) throws IOException, InvalidFormatException {
         Data data = new Data();
 
-        System.out.println(data.allData);
+        //System.out.println(data.allData);
 
-        //data.
+        data.sendToPython();
         /*String semester = "2021F";
         for (String course : Data.getCourseList(semester)) {
             System.out.print(course + " : ");
