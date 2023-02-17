@@ -337,13 +337,13 @@ public class Data {
     public static void main(String[] args) throws IOException, InvalidFormatException {
         Data data = new Data();
 
+        System.out.println(data.allData);
         /*String semester = "2021F";
         for (String course : Data.getCourseList(semester)) {
             System.out.print(course + " : ");
             System.out.println(Data.getFileData(charsBtwn(course, 0, 4), charsBtwn(course, 5, course.length()), semester));
         }
         data.getCourseMinMaxList(semester);*/
-        System.out.println(data.allData);
 
 
         /*try {
