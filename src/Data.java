@@ -45,6 +45,10 @@ public class Data {
 
     public final String[] semesters = {"2021F", "2021S", "2022F", "2022S", "2023S"};
 
+    public HashMap<String, HashMap<String, Course>> getAllData() {
+        return allData;
+    }
+
     public Data(String fileLocation) throws IOException, InvalidFormatException {
         data = new HashMap<>();
         coursePointsData = new HashMap<>();
@@ -68,7 +72,7 @@ public class Data {
         for (String semester : semesters) {
             getCourseMinMaxList(semester);
             for (String course : getCourseList(semester)) {
-                if (output.get(charsBtwn(course, 0, 4)) == null) output.put(charsBtwn(course, 0, 4), new HashMap<>());
+                output.computeIfAbsent(charsBtwn(course, 0, 4), k -> new HashMap<>());
                 output.get(charsBtwn(course, 0, 4)).put(semester, readFile(course, semester));
             }
 
