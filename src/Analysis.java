@@ -44,11 +44,11 @@ public class Analysis {
     }
     public static Integer getNextMinPoints(String course) {
         Data data = new Data();
-        HashMap<String, HashMap<String, Course>> allData = data.allData;
+        HashMap<String, HashMap<String, HashMap<String, Course>>> allData = data.allData;
 
         ArrayList<Integer> points = new ArrayList<>();
         for (String info : allData.get(course).keySet()) {
-            points.add(allData.get(course).get(info).getMinPoints());
+            points.add(allData.get(course).get(info).get(Data.charsBtwn(course, 5, course.length() - 1)).getMinPoints());
         }
         for (int i = 0; i < points.size(); i++) {
             try {

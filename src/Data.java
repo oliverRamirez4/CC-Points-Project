@@ -2,6 +2,7 @@ import org.apache.poi.openxml4j.exceptions.InvalidFormatException;
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.Sheet;
+import org.apache.poi.ss.usermodel.Workbook;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 
 import java.io.*;
@@ -39,13 +40,14 @@ public class Data {
     /**
      * Level 1: Course ID
      * Level 2: Year & Semester
-     * Level 3: Course info
+     * Level 3: Block
+     * Level 4: Course info
      */
-    HashMap<String, HashMap<String, Course>> allData;
+    HashMap<String, HashMap<String, HashMap<String, Course>>> allData;
 
     public final String[] semesters = {"2021F", "2021S", "2022F", "2022S", "2023S"};
 
-    public HashMap<String, HashMap<String, Course>> getAllData() {
+    public HashMap<String, HashMap<String, HashMap<String, Course>>> getAllData() {
         return allData;
     }
 
@@ -66,14 +68,17 @@ public class Data {
         allData = readAllFiles();
     }
 
-    public HashMap<String, HashMap<String, Course>> readAllFiles() {
-        HashMap<String, HashMap<String, Course>> output = new HashMap<>();
+    public HashMap<String, HashMap<String, HashMap<String, Course>>> readAllFiles() {
+        HashMap<String, HashMap<String, HashMap<String, Course>>> output = new HashMap<>();
 
         for (String semester : semesters) {
             getCourseMinMaxList(semester);
             for (String course : getCourseList(semester)) {
-                output.computeIfAbsent(charsBtwn(course, 0, 4), k -> new HashMap<>());
-                output.get(charsBtwn(course, 0, 4)).put(semester, readFile(course, semester));
+                output.computeIfAbsent(semester, k -> new HashMap<>());
+                output.get(semester).computeIfAbsent(charsBtwn(course, 0, 4), k -> new HashMap<>());
+                for (String block : minMaxPoints.get(semester).get(charsBtwn(course, 0, 4)).keySet()) {
+                    output.get(semester).get(charsBtwn(course, 0, 4)).put(block, readFile(course, semester));
+                }
             }
 
         }
@@ -263,7 +268,7 @@ public class Data {
         return id;
     }
 
-    private static String charsBtwn(String input, int start, int end) {
+    public static String charsBtwn(String input, int start, int end) {
         String id = "";
         try {
             for (int i = start; i <= end; i++) id += input.toCharArray()[i];
@@ -332,12 +337,36 @@ public class Data {
         return map;
     }
 
+    public void sendToPython() {
+        Workbook python = null;
+        try {
+            python = new XSSFWorkbook("src/pythonProject/classData.xlsx");
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
 
+        Sheet sheet = python.getSheetAt(0);
+
+        int i = 1;
+
+        for (String course : allData.keySet()) {
+            for (String semester : allData.get(course).keySet()) {
+                for (String block : allData.get(course).get(semester).keySet()) {
+
+                }
+                //Course info = allData.get(course).get(semester);
+
+                //sheet.getRow(i).getCell(0).setCellValue();
+            }
+        }
+    }
 
     public static void main(String[] args) throws IOException, InvalidFormatException {
         Data data = new Data();
 
         System.out.println(data.allData);
+
+        //data.
         /*String semester = "2021F";
         for (String course : Data.getCourseList(semester)) {
             System.out.print(course + " : ");

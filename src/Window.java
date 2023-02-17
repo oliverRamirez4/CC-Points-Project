@@ -82,7 +82,8 @@ public class Window {
                 startPanel.setVisible(false);
                 String key = (String)classSelector.getSelectedItem();
                 String semester = "2023S";
-                Course current = data.getAllData().get(key).get(semester);
+                String block = "0"; // TODO: Make a variable for block that will work
+                Course current = data.getAllData().get(key).get(semester).get(block);
                 topFrame.add(current);
 
             }
