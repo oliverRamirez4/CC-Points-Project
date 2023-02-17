@@ -68,8 +68,8 @@ public class Data {
         for (String semester : semesters) {
             getCourseMinMaxList(semester);
             for (String course : getCourseList(semester)) {
-                if (output.get(course) == null) output.put(course, new HashMap<>());
-                output.get(course).put(semester, readFile(course, semester));
+                if (output.get(charsBtwn(course, 0, 4)) == null) output.put(charsBtwn(course, 0, 4), new HashMap<>());
+                output.get(charsBtwn(course, 0, 4)).put(semester, readFile(course, semester));
             }
 
         }
