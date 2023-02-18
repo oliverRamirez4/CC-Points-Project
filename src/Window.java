@@ -5,23 +5,26 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.Arrays;
+import java.util.HashMap;
 
 public class Window {
     Data data;
-
     JFrame topFrame;
     JPanel startPanel;
     Course coursePanel;
-    JLabel CCLogo;
+    JLabel CCLogo, printData;
     String[] classList;
     JComboBox classSelector;
     JButton goButton;
 
     String [] courses;
 
+    HashMap<String, HashMap<String, HashMap<String, Course>>> allData;
+
     public Window(){
         //make Data object
         data=new Data();
+        allData = data.getAllData();
 
 
         //what course does user select (the key)
@@ -44,7 +47,7 @@ public class Window {
 
         //need for using dropDown menu
         //courses=data.getCourseList();
-        classList = data.getAllData().keySet().toArray(String[]::new);
+        classList = allData.keySet().toArray(String[]::new);
         Arrays.sort(classList);
 
         classSelector=new JComboBox(classList);
@@ -56,19 +59,17 @@ public class Window {
 
 
     public void display(){
-        topFrame.setSize(400, 600);
+        topFrame.setSize(600, 200);
         topFrame.setVisible(true);
         topFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         topFrame.setTitle("Colorado College Point Calculator");
 
         startPanel.setBackground(Color.LIGHT_GRAY);
-        startPanel.setLayout(new BoxLayout(startPanel,BoxLayout.Y_AXIS));
+        startPanel.setLayout(new BoxLayout(startPanel,BoxLayout.X_AXIS));
         topFrame.add(startPanel);
-
 
         coursePanel.setBackground(Color.LIGHT_GRAY);
         coursePanel.setLayout(new BoxLayout(coursePanel,BoxLayout.PAGE_AXIS));
-
 
         startPanel.add(CCLogo);
 
@@ -80,11 +81,18 @@ public class Window {
             @Override
             public void actionPerformed(ActionEvent e) {
                 startPanel.setVisible(false);
+                topFrame.add(coursePanel);
+                coursePanel.setVisible(true);
                 String key = (String)classSelector.getSelectedItem();
                 String semester = "2023S";
-                String block = "0"; // TODO: Make a variable for block that will work
-                Course current = data.getAllData().get(key).get(semester).get(block);
+                HashMap<String, HashMap<String, Course>> value = allData.get(key);
+                Course current = value.get(key).get(semester);
+                String thisData = data.getPrintData();
+                printData = new JLabel(thisData);
                 topFrame.add(current);
+                coursePanel.add(printData);
+                coursePanel.add(CCLogo);
+
 
             }
         });
