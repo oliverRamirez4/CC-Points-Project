@@ -13,5 +13,6 @@
     <orderEntry type="library" name="apache.logging.log4j.1.2.api" level="project" />
     <orderEntry type="library" name="apache.logging.log4j.core" level="project" />
     <orderEntry type="library" name="apache.poi.ooxml.lite" level="project" />
+    <orderEntry type="library" name="grapecity.documents.excel.gcexcel" level="project" />
   </component>
 </module>

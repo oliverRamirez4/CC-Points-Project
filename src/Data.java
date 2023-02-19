@@ -1,9 +1,8 @@
 import org.apache.poi.openxml4j.exceptions.InvalidFormatException;
-import org.apache.poi.ss.usermodel.Cell;
-import org.apache.poi.ss.usermodel.Row;
-import org.apache.poi.ss.usermodel.Sheet;
-import org.apache.poi.ss.usermodel.Workbook;
+import org.apache.poi.ss.usermodel.*;
+import org.apache.poi.xssf.usermodel.XSSFRow;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
+import org.apache.poi.xssf.usermodel.XSSFWorkbookFactory;
 
 import java.io.*;
 import java.util.*;
@@ -338,43 +337,60 @@ public class Data {
     }
 
     public void sendToPython() {
+        FileInputStream inputStream = null;
         Workbook python = null;
+        String filePath = "src/pythonProject/classData.xlsx";
+
         try {
-            python = new XSSFWorkbook(new File("src/pythonProject/classData.xlsx"));
+            inputStream = new FileInputStream(new File(filePath));
+            python = WorkbookFactory.create(inputStream);
         } catch (IOException e) {
-            throw new RuntimeException(e);
-        } catch (InvalidFormatException e) {
             throw new RuntimeException(e);
         }
 
+        Sheet sheet = python.getSheetAt(0);
+
         int i = 1;
 
-        for (Row row : python.getSheetAt(0)) {
+        for (Row row : sheet) {
             if (row.getRowNum() != 0) {
-                python.getSheetAt(0).removeRow(row);
+                sheet.createRow(i);
                 i++;
             }
         }
 
-        for (String course : allData.keySet()) {
-            for (String semester : allData.get(course).keySet()) {
-                for (String block : allData.get(course).get(semester).keySet()) {
-                    try {
-                        python.getSheetAt(0).getRow(i).getCell(0).setCellValue(course);
-                        python.getSheetAt(0).getRow(i).getCell(1).setCellValue(block);
-                        python.getSheetAt(0).getRow(i).getCell(2).setCellValue(charsBtwn(semester, 0, 4));
-                        python.getSheetAt(0).getRow(i).getCell(3).setCellValue(charsBtwn(semester, 5, 5));
-                        python.getSheetAt(0).getRow(i).getCell(4).setCellValue(minMaxPoints.get(semester).get(course).get(block).get(2));
-                        python.getSheetAt(0).getRow(i).getCell(5).setCellValue(minMaxPoints.get(semester).get(course).get(block).get(1));
-                        python.getSheetAt(0).getRow(i).getCell(6).setCellValue(minMaxPoints.get(semester).get(course).get(block).get(2) - minMaxPoints.get(semester).get(course).get(block).get(1));
-                        python.getSheetAt(0).getRow(i).getCell(7).setCellValue(minMaxPoints.get(semester).get(course).get(block).get(0));
-                    } catch (NullPointerException n) {
-                        ;
-                    }
+        i = 1;
+
+        for (String semester : allData.keySet()) {
+            for (String course : allData.get(semester).keySet()) {
+                for (String block : allData.get(semester).get(course).keySet()) {
+                    Row row = sheet.createRow(i);
+                    row.createCell(0).setCellValue(course);
+                    row.createCell(1).setCellValue(block);
+                    row.createCell(2).setCellValue(charsBtwn(semester, 0, 4));
+                    row.createCell(3).setCellValue(charsBtwn(semester, 5, 5));
+                    row.createCell(4).setCellValue(minMaxPoints.get(semester).get(course).get(block).get(2));
+                    row.createCell(5).setCellValue(minMaxPoints.get(semester).get(course).get(block).get(1));
+                    if (minMaxPoints.get(semester).get(course).get(block).get(2) - minMaxPoints.get(semester).get(course).get(block).get(1) <= 0)
+                        row.createCell(6).setCellValue(0);
+                    else
+                        row.createCell(6).setCellValue(minMaxPoints.get(semester).get(course).get(block).get(2) - minMaxPoints.get(semester).get(course).get(block).get(1));
+                    row.createCell(7).setCellValue(minMaxPoints.get(semester).get(course).get(block).get(0));
+                    i++;
                 }
             }
-            i++;
         }
+
+        try {
+            inputStream.close();
+            FileOutputStream outputStream = new FileOutputStream(filePath);
+            python.write(outputStream);
+            python.close();
+            outputStream.close();
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+
     }
 
     public static void main(String[] args) throws IOException, InvalidFormatException {
