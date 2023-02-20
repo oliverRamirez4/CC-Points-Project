@@ -76,22 +76,22 @@ public class Window {
                 String[] semesters= data.getSemesters();
                 System.out.println(Arrays.toString(semesters));
                 Course current;
+                String[] blockOptions = {"1", "2", "3", "4", "5", "6", "7", "8", "h"};
                 for (String semester: semesters) {
-                    for (int i=1;i<=8;i++) {
+                    for (int i=0;i < blockOptions.length;i++) {
                         try {
-                            current = data.getAllData().get(semester).get(key).get(String.valueOf(i));
+                            current = data.getAllData().get(semester).get(key).get(blockOptions[i]);
                             if(current!=null){
                                 coursePanel.add(new JLabel(semester));
                             }
                             coursePanel.add(current);
 
-                            coursePanel.add(doneButton);
-                            coursePanel.setVisible(true);
-
                         } catch (NullPointerException t) {
                         }
 
                     }
+                    coursePanel.add(doneButton);
+                    coursePanel.setVisible(true);
                 }
 
                 coursePanel.setVisible(true);
