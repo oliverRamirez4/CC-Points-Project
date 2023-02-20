@@ -68,4 +68,5 @@ model = LinearRegression().fit(train_features, train_target)
 test_data['MinPoint'] = model.predict(test_data)
 
 # Print the test data with the predicted MinPoint values
+test_data.to_csv("predictedClassPoint.csv")
 print(test_data)
