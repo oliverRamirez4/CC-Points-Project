@@ -392,6 +392,9 @@ public class Data {
         }
 
     }
+    public String[] getSemesters(){
+        return semesters;
+    }
 
     public static void main(String[] args) throws IOException, InvalidFormatException {
         Data data = new Data();

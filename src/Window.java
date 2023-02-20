@@ -28,13 +28,15 @@ public class Window {
 
         //create the JPanel that will go to course information
         coursePanel=new JPanel();
+            //give the Course Panel a box layout manager
+            coursePanel.setLayout(new BoxLayout(coursePanel,BoxLayout.PAGE_AXIS));
 
         //create a JLabel containing the CC Logo
         CCLogo = new JLabel(new ImageIcon("src/CC-Logo-Stacked.png"));
 
         //need for using dropDown menu
         //courses=data.getCourseList();
-        classList = data.getAllData().keySet().toArray(String[]::new);
+        classList = data.getAllData().get("2023S").keySet().toArray(String[]::new);
         Arrays.sort(classList);
 
         classSelector=new JComboBox(classList);
@@ -71,16 +73,25 @@ public class Window {
                 coursePanel.setVisible(true);
 
                 String key = (String)classSelector.getSelectedItem();
-                //String semester = "2023S";
-                String[] semesters= data.getAllData().get(key).keySet().toArray(new String[data.getAllData().keySet().size()]);
+                String[] semesters= data.getSemesters();
                 System.out.println(Arrays.toString(semesters));
-                Course current= new Course();
+                Course current;
                 for (String semester: semesters) {
-                    current = data.getAllData().get(key).get(semester);
-                    coursePanel.add(current);
-                    coursePanel.add(new JLabel(semester));
-                    coursePanel.add(doneButton);
-                    System.out.print(current);
+                    for (int i=1;i<=8;i++) {
+                        try {
+                            current = data.getAllData().get(semester).get(key).get(String.valueOf(i));
+                            if(current!=null){
+                                coursePanel.add(new JLabel(semester));
+                            }
+                            coursePanel.add(current);
+
+                            coursePanel.add(doneButton);
+                            coursePanel.setVisible(true);
+
+                        } catch (NullPointerException t) {
+                        }
+
+                    }
                 }
 
                 coursePanel.setVisible(true);
@@ -92,6 +103,7 @@ public class Window {
             public void actionPerformed(ActionEvent e) {
                 coursePanel.setVisible(false);
                 startPanel.setVisible(true);
+                coursePanel.removeAll();
             }
         });
 
