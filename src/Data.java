@@ -397,7 +397,10 @@ public class Data {
         return semesters;
     }
 
-    //It just runs the python code. Run this after running "sendToPython()". Then you can read the returned data.
+    /**
+     * It just runs the python code. Run this after running "sendToPython()". Then you can read the returned data.
+     * @throws Exception
+     */
     public static void runPython() throws Exception {
         ProcessBuilder processBuilder = new ProcessBuilder("python", "./Final Project/pythonProject/main.py");
         processBuilder.redirectErrorStream(true);
