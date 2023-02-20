@@ -4,12 +4,11 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="ca35bb24-6ae2-4e2c-ad64-7dd73f7991f7" name="Changes" comment="2/19/23 4:13pm">
-      <change afterPath="$PROJECT_DIR$/predictClass.csv" afterDir="false" />
+    <list default="true" id="ca35bb24-6ae2-4e2c-ad64-7dd73f7991f7" name="Changes" comment="2/19/23 5:30pm">
+      <change afterPath="$PROJECT_DIR$/classDataTest.csv" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/classData.csv" beforeDir="false" afterPath="$PROJECT_DIR$/classData.csv" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/main.py" beforeDir="false" afterPath="$PROJECT_DIR$/main.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../src/pythonProject/classData.xlsx" beforeDir="false" afterPath="$PROJECT_DIR$/../src/pythonProject/classData.xlsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/predictClass.csv" beforeDir="false" afterPath="$PROJECT_DIR$/predictClass.csv" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -33,6 +32,7 @@
   <component name="PropertiesComponent"><![CDATA[{
   "keyToString": {
     "WebServerToolWindowFactoryState": "false",
+    "last_opened_file_path": "/Users/qsebso/Desktop/CP2/Final_Project_Points_Selector_Project/pythonProject",
     "node.js.detected.package.eslint": "true",
     "node.js.detected.package.tslint": "true",
     "node.js.selected.package.eslint": "(autodetect)",
@@ -105,7 +105,7 @@
       <option name="presentableId" value="Default" />
       <updated>1676848336651</updated>
       <workItem from="1676848338344" duration="1085000" />
-      <workItem from="1676849509044" duration="3365000" />
+      <workItem from="1676849509044" duration="8745000" />
     </task>
     <task id="LOCAL-00001" summary="2/19/23 4:13pm">
       <created>1676848393183</created>
@@ -114,7 +114,28 @@
       <option name="project" value="LOCAL" />
       <updated>1676848393185</updated>
     </task>
-    <option name="localTasksCounter" value="2" />
+    <task id="LOCAL-00002" summary="2/19/23 5:30pm">
+      <created>1676853091880</created>
+      <option name="number" value="00002" />
+      <option name="presentableId" value="LOCAL-00002" />
+      <option name="project" value="LOCAL" />
+      <updated>1676853091880</updated>
+    </task>
+    <task id="LOCAL-00003" summary="2/19/23 5:30pm">
+      <created>1676853123431</created>
+      <option name="number" value="00003" />
+      <option name="presentableId" value="LOCAL-00003" />
+      <option name="project" value="LOCAL" />
+      <updated>1676853123431</updated>
+    </task>
+    <task id="LOCAL-00004" summary="2/19/23 5:30pm">
+      <created>1676853141146</created>
+      <option name="number" value="00004" />
+      <option name="presentableId" value="LOCAL-00004" />
+      <option name="project" value="LOCAL" />
+      <updated>1676853141146</updated>
+    </task>
+    <option name="localTasksCounter" value="5" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -133,7 +154,8 @@
   </component>
   <component name="VcsManagerConfiguration">
     <MESSAGE value="2/19/23 4:13pm" />
-    <option name="LAST_COMMIT_MESSAGE" value="2/19/23 4:13pm" />
+    <MESSAGE value="2/19/23 5:30pm" />
+    <option name="LAST_COMMIT_MESSAGE" value="2/19/23 5:30pm" />
   </component>
   <component name="com.intellij.coverage.CoverageDataManagerImpl">
     <SUITE FILE_PATH="coverage/pythonProject$main.coverage" NAME="main Coverage Results" MODIFIED="1676848802841" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
