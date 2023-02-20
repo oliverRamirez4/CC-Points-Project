@@ -1,4 +1,5 @@
 import javax.swing.*;
+import javax.swing.border.Border;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -11,10 +12,13 @@ public class Window {
     JPanel startPanel, coursePanel;
     JLabel CCLogo;
     String[] classList;
+
+    String[] blockList;
     JComboBox classSelector;
     JButton goButton, doneButton;
-
     String [] courses;
+
+    Border cpBorder;
 
     public Window(){
         //make Data object
@@ -28,8 +32,10 @@ public class Window {
 
         //create the JPanel that will go to course information
         coursePanel=new JPanel();
-            //give the Course Panel a box layout manager
-            coursePanel.setLayout(new BoxLayout(coursePanel,BoxLayout.PAGE_AXIS));
+
+        //Create the border that holds the title for CoursePanel
+        //cpBorder = new
+
 
         //create a JLabel containing the CC Logo
         CCLogo = new JLabel(new ImageIcon("src/CC-Logo-Stacked.png"));
@@ -38,6 +44,8 @@ public class Window {
         //courses=data.getCourseList();
         classList = data.getAllData().get("2023S").keySet().toArray(String[]::new);
         Arrays.sort(classList);
+
+        blockList = new String[]{"1", "2", "3", "4", "5", "6", "7", "8", "H", "5-8","5-6", "7-8" };
 
         classSelector=new JComboBox(classList);
 
@@ -60,6 +68,9 @@ public class Window {
 
         startPanel.add(CCLogo);
 
+        //give the Course Panel a box layout manager
+        coursePanel.setLayout(new BoxLayout(coursePanel,BoxLayout.PAGE_AXIS));
+
         startPanel.add(classSelector);
 
         startPanel.add(goButton);
@@ -76,11 +87,10 @@ public class Window {
                 String[] semesters= data.getSemesters();
                 System.out.println(Arrays.toString(semesters));
                 Course current;
-                String[] blockOptions = {"1", "2", "3", "4", "5", "6", "7", "8", "h"};
                 for (String semester: semesters) {
-                    for (int i=0;i < blockOptions.length;i++) {
+                    for (int i=0;i < blockList.length;i++) {
                         try {
-                            current = data.getAllData().get(semester).get(key).get(blockOptions[i]);
+                            current = data.getAllData().get(semester).get(key).get(blockList[i]);
                             if(current!=null){
                                 coursePanel.add(new JLabel(semester));
                             }
@@ -113,6 +123,8 @@ public class Window {
     public static void main(String[] args) {
         Window w = new Window();
         w.display();
+        Data data = new Data();
+        System.out.println(data.getAllData().get("2023S").get("DS416").keySet());
     }
 
 }
