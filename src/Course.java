@@ -9,8 +9,6 @@ public class Course extends JPanel {
     public int minPoints;
     public HashMap<Integer, Integer> pointBids;
 
-    JLabel courseIDLabel;
-
     JLabel blockNumberLabel;
 
     JLabel minPointsLabel;
@@ -21,11 +19,10 @@ public class Course extends JPanel {
         this.minPoints = minPoints;
         this.pointBids = pointBids;
 
-        courseIDLabel=new JLabel("Course: " + courseID);
         blockNumberLabel = new JLabel("block: " + blockNumber);
         minPointsLabel = new JLabel("Minimum Points needed: " + minPoints);
 
-        add(courseIDLabel);
+
         add(blockNumberLabel);
         add(minPointsLabel);
 

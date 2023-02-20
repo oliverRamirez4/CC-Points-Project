@@ -18,8 +18,6 @@ public class Window {
     JButton goButton, doneButton;
     String [] courses;
 
-    Border cpBorder;
-
     public Window(){
         //make Data object
         data=new Data();
@@ -34,7 +32,7 @@ public class Window {
         coursePanel=new JPanel();
 
         //Create the border that holds the title for CoursePanel
-        //cpBorder = new
+
 
 
         //create a JLabel containing the CC Logo
@@ -84,6 +82,7 @@ public class Window {
                 coursePanel.setVisible(true);
 
                 String key = (String)classSelector.getSelectedItem();
+                coursePanel.setBorder(BorderFactory.createTitledBorder(key));
                 String[] semesters= data.getSemesters();
                 System.out.println(Arrays.toString(semesters));
                 Course current;
@@ -124,7 +123,7 @@ public class Window {
         Window w = new Window();
         w.display();
         Data data = new Data();
-        System.out.println(data.getAllData().get("2023S").get("DS416").keySet());
+        System.out.println(data.getAllData().get("2023S").get("SP101").keySet());
     }
 
 }
