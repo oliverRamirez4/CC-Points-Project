@@ -40,10 +40,12 @@ public class Window {
 
         //need for using dropDown menu
         //courses=data.getCourseList();
-        classList = data.getAllData().get("2023S").keySet().toArray(String[]::new);
+        classList = data.getCourseList();
+        //classList = data.getAllData().get("2023S").keySet().toArray(String[]::new);
         Arrays.sort(classList);
+        System.out.println(classList.length);
 
-        blockList = new String[]{"1", "2", "3", "4", "5", "6", "7", "8", "H", "5-8","5-6", "7-8" };
+        blockList = new String[]{"1", "2", "3", "4", "5", "6", "7", "8", "H", "5-6", "5-7", "5-8", "6-7", "6-8", "7-8", "1-2", "1-3", "1-4", "2-3", "2-4", "3-4" };
 
         classSelector=new JComboBox(classList);
 
