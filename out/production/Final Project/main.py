@@ -8,109 +8,73 @@ Blocks 5-8 = 5678 etc.
 Block H = 9
 """
 
-"""
-# Program for demonstration of one hot encoding
-import numpy as np
-import pandas as pd
-import csv
 
-# import the data required
+import pandas as pd
+from sklearn.preprocessing import OneHotEncoder
+
+# Load the data from the CSV file
 data = pd.read_csv("classDataTest.csv")
-print(data.head())
 
-#Id,Block,Year,Demand,Limit,Waitlist,MinPoint
-print(data['Block'].unique())
-print(data['Year'].unique())
-print(data['Demand'].unique())
-print(data['Limit'].unique())
-print(data['Waitlist'].unique())
-print(data['MinPoint'].unique())
+# Bin the Demand column into 5 categories based on equal frequency
+#data['Demand_bin'] = pd.qcut(data['Demand'], q=5, labels=False, duplicates='drop')
 
-data['Block'].value_counts()
-data['Year'].value_counts()
-data['Demand'].value_counts()
-data['Limit'].value_counts()
-data['Waitlist'].value_counts()
+#data['Waitlist'] = data['Waitlist'].apply(lambda x: 1 if x > 0 else 0)
 
-one_hot_encoded_data = pd.get_dummies(data, columns = ['Block', 'Year', 'Demand', 'Limit', 'Waitlist'])
+# Use one hot encoding on the Id and block columns, and the new Demand_bin column
+cols_to_encode = ['Block','Year','Demand','Limit','Waitlist']
+encoder = OneHotEncoder(sparse=False)
+encoded_cols = encoder.fit_transform(data[cols_to_encode])
+# Get the feature names for the encoded columns
+feature_names = encoder.get_feature_names_out(cols_to_encode)
+
+# Concatenate the encoded columns with the Waitlist and MinPoint columns and reorder the columns
+new_data = pd.concat([pd.DataFrame(encoded_cols, columns=feature_names), data[['MinPoint']]], axis=1)
+
+# Save the new dataframe to a CSV file with column names
+new_data.to_csv("oneHotEncodedDataTest.csv", index=False, header=list(feature_names) + ['MinPoint'])
+
+data_predict = pd.read_csv("predictClass.csv")
+
+cols_to_encode = ['Block','Year','Demand','Limit','Waitlist']
+
+encoded_cols = encoder.transform(data_predict[cols_to_encode])
 
 
-# move MinPoint column to the back
-MinPoint_col = one_hot_encoded_data.pop('MinPoint')
-one_hot_encoded_data.insert(len(one_hot_encoded_data.columns), 'MinPoint', MinPoint_col)
+# Concatenate the encoded columns with the Waitlist and MinPoint columns and reorder the columns
+new_predict_data = pd.concat([pd.DataFrame(encoded_cols, columns=feature_names)], axis=1)
 
-# write the one hot encoded data to a new CSV file
-one_hot_encoded_data.to_csv('one_hot_encoded_dataTest.csv', index=False)
-"""
+# Save the new dataframe to a CSV file with column names
+new_predict_data.to_csv("oneHotEncodedPredictTest.csv", index=False, header=list(feature_names))
 
-"""
-# Program for demonstration of one hot encoding
-import numpy as np
+
+
 import pandas as pd
-import csv
-
-# import the data required
-data = pd.read_csv("classData.csv")
-print(data.head())
-
-#Id,Block,Year,Demand,Limit,Waitlist,MinPoint
-print(data['Block'].unique())
-print(data['Year'].unique())
-print(data['Demand'].unique())
-print(data['Limit'].unique())
-print(data['Waitlist'].unique())
-print(data['MinPoint'].unique())
-
-data['Block'].value_counts()
-data['Year'].value_counts()
-data['Demand'].value_counts()
-data['Limit'].value_counts()
-data['Waitlist'].value_counts()
-
-one_hot_encoded_data = pd.get_dummies(data, columns = ['Block', 'Year', 'Demand', 'Limit', 'Waitlist'])
-
-
-# move MinPoint column to the back
-MinPoint_col = one_hot_encoded_data.pop('MinPoint')
-one_hot_encoded_data.insert(len(one_hot_encoded_data.columns), 'MinPoint', MinPoint_col)
-
-# write the one hot encoded data to a new CSV file
-one_hot_encoded_data.to_csv('one_hot_encoded_data.csv', index=False)
-"""
-
-"""
-# Import necessary libraries
-import pandas as pd
-from sklearn.model_selection import train_test_split
 from sklearn.linear_model import LinearRegression
+from sklearn.linear_model import Ridge
 
-# Load the one_hot_encoded_data.csv file into a Pandas DataFrame
-data = pd.read_csv('one_hot_encoded_dataTest.csv')
-print(data.isnull().sum())
-# Replace missing values with the mean of the column
-data.fillna(data.mean(), inplace=True)
+# Load the training data from the CSV file
+train_data = pd.read_csv("oneHotEncodedDataTest.csv")
 
+# Load the test data to be predicted
+test_data = pd.read_csv("oneHotEncodedPredictTest.csv")
 
-# Split the data into training and testing sets
-X = data.iloc[:, :-1]  # input features
-y = data.iloc[:, -1]   # target variable
-X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)
+# Get the feature columns and the target column (MinPoint) for the training data
+train_features = train_data.drop('MinPoint', axis=1)
+train_target = train_data['MinPoint']
 
+# Fit a linear regression model to the training data
+model = Ridge().fit(train_features, train_target)
 
-# Create a linear regression model and fit it to the training data
-model = LinearRegression()
-model.fit(X_train, y_train)
+# Predict the MinPoint values for the test data
+test_data['MinPoint'] = model.predict(test_data)
 
+# Print the test data with the predicted MinPoint values
 
-# Load the predictClass.csv file into a new Pandas DataFrame
-new_data = pd.read_csv('predictClass.csv')
+test_data.to_csv("predictedClassPoint.csv")
+print(test_data)
 
-# Use the model to make predictions on the new data
-predictions = model.predict(new_data[['Block', 'Year', 'Demand', 'Limit', 'Waitlist']])
+coef = model.coef_
+intercept = model.intercept_
 
-mse = mean_squared_error(y_test, y_pred)
-rmse = np.sqrt(mse)
-
-print('RMSE:', rmse)
-print(predictions)
-"""
+print("Coefficients:", coef)
+print("Intercept:", intercept)
