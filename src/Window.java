@@ -2,6 +2,7 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.ArrayList;
 import java.util.Arrays;
 
 public class Window {
@@ -9,7 +10,7 @@ public class Window {
 
     JFrame topFrame;
     JPanel startPanel, coursePanel;
-    JLabel CCLogo;
+    JLabel CCLogo,avg;
     String[] classList;
 
     String[] blockList;
@@ -36,6 +37,7 @@ public class Window {
 
         //create a JLabel containing the CC Logo
         CCLogo = new JLabel(new ImageIcon("src/CC-Logo-Stacked.png"));
+        avg = new JLabel();
 
         //need for using dropDown menu
         //courses=data.getCourseList();
@@ -87,11 +89,14 @@ public class Window {
                 String[] semesters= data.getSemesters();
                 System.out.println(Arrays.toString(semesters));
                 Course current;
+                ArrayList<Double> points = new ArrayList<Double>();
                 for (String semester: semesters) {
                     for (int i=0;i < blockList.length;i++) {
                         try {
                             current = data.getAllData().get(semester).get(key).get(blockList[i]);
                             if(current!=null){
+                                double min = current.minPoints;
+                                points.add(min);
                                 coursePanel.add(new JLabel(semester));
                             }
                             coursePanel.add(current);
@@ -100,6 +105,13 @@ public class Window {
                         }
 
                     }
+                    double sumPoints = 0;
+                    for (double minPoint: points){
+                        sumPoints+=minPoint;
+                    }
+                    double average = sumPoints/(points.size());
+                    avg.setText("Average points required: " + String.valueOf(average));
+                    coursePanel.add(avg);
                     coursePanel.add(doneButton);
                     coursePanel.setVisible(true);
                 }
