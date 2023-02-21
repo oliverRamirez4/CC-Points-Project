@@ -1,8 +1,6 @@
 import org.apache.poi.openxml4j.exceptions.InvalidFormatException;
 import org.apache.poi.ss.usermodel.*;
-import org.apache.poi.xssf.usermodel.XSSFRow;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
-import org.apache.poi.xssf.usermodel.XSSFWorkbookFactory;
 
 import java.io.*;
 import java.util.*;
@@ -439,6 +437,18 @@ public class Data {
         }
         String [] courseList = classList.toArray(new String[classList.size()]);
         return courseList;
+    }
+
+    /**
+     * It just runs the python code. Run this after running "sendToPython()". Then you can read the returned data.
+     * @throws Exception
+     */
+    public static void runPython() throws Exception {
+        ProcessBuilder processBuilder = new ProcessBuilder("python", "./Final Project/pythonProject/main.py");
+        processBuilder.redirectErrorStream(true);
+
+        processBuilder.start();
+        System.out.println("Done");
     }
 
 
