@@ -366,7 +366,7 @@ public class Data {
     public void sendToPython() {
         FileInputStream inputStream = null;
         Workbook python = null;
-        String filePath = "src/pythonProject/classData.xlsx";
+        String filePath = "./Final Project/pythonProject/classData.csv";
 
         try {
             inputStream = new FileInputStream(new File(filePath));
@@ -420,6 +420,61 @@ public class Data {
 
     }
 
+    public void sendToPython(String course) {
+        FileInputStream inputStream = null;
+        Workbook python = null;
+        String filePath = "./Final Project/pythonProject/classData.csv";
+
+        try {
+            inputStream = new FileInputStream(filePath);
+            python = WorkbookFactory.create(inputStream);
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+
+        Sheet sheet = python.getSheetAt(0);
+
+        int i = 1;
+
+        for (Row row : sheet) {
+            if (row.getRowNum() != 0) {
+                sheet.createRow(i);
+                i++;
+            }
+        }
+
+        i = 1;
+
+        for (String semester : allData.keySet()) {
+            for (String block : allData.get(semester).get(course).keySet()) {
+                Row row = sheet.createRow(i);
+                row.createCell(0).setCellValue(course);
+                row.createCell(1).setCellValue(block);
+                row.createCell(2).setCellValue(charsBtwn(semester, 0, 4));
+                row.createCell(3).setCellValue(charsBtwn(semester, 5, 5));
+                row.createCell(4).setCellValue(minMaxPoints.get(semester).get(course).get(block).get(2));
+                row.createCell(5).setCellValue(minMaxPoints.get(semester).get(course).get(block).get(1));
+                if (minMaxPoints.get(semester).get(course).get(block).get(2) - minMaxPoints.get(semester).get(course).get(block).get(1) <= 0)
+                    row.createCell(6).setCellValue(0);
+                else
+                    row.createCell(6).setCellValue(minMaxPoints.get(semester).get(course).get(block).get(2) - minMaxPoints.get(semester).get(course).get(block).get(1));
+                row.createCell(7).setCellValue(minMaxPoints.get(semester).get(course).get(block).get(0));
+                i++;
+            }
+        }
+
+        try {
+            inputStream.close();
+            FileOutputStream outputStream = new FileOutputStream(filePath);
+            python.write(outputStream);
+            python.close();
+            outputStream.close();
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+
+    }
+
     public String[] getSemesters() {
         return semesters;
     }
@@ -452,8 +507,9 @@ public class Data {
     }
 
 
-    public static void main(String[] args) throws IOException, InvalidFormatException {
+    public static void main(String[] args) throws Exception {
         Data data = new Data();
-        data.sendToPython();
+        data.sendToPython(new Scanner(System.in).nextLine());
+        runPython();
     }
 }
