@@ -13,7 +13,7 @@ import pandas as pd
 from sklearn.preprocessing import OneHotEncoder
 
 # Load the data from the CSV file
-data = pd.read_csv("classDataTestNo0Point.csv")
+data = pd.read_csv("classDataTest.csv")
 
 # Use one hot encoding on the Id and block columns, and the new Demand_bin column
 cols_to_encode = ['Block','Year','Demand','Limit','Waitlist']
@@ -26,7 +26,7 @@ feature_names = encoder.get_feature_names_out(cols_to_encode)
 new_data = pd.concat([pd.DataFrame(encoded_cols, columns=feature_names), data[['MinPoint']]], axis=1)
 
 # Save the new dataframe to a CSV file with column names
-new_data.to_csv("oneHotEncodedDataTest0Point.csv", index=False, header=list(feature_names) + ['MinPoint'])
+new_data.to_csv("oneHotEncodedDataTest.csv", index=False, header=list(feature_names) + ['MinPoint'])
 
 data_predict = pd.read_csv("predictClass.csv")
 
@@ -47,7 +47,7 @@ from sklearn.linear_model import LinearRegression
 from sklearn.linear_model import Ridge
 
 # Load the training data from the CSV file
-train_data = pd.read_csv("oneHotEncodedDataTest0Point.csv")
+train_data = pd.read_csv("oneHotEncodedDataTest.csv")
 
 # Load the test data to be predicted
 test_data = pd.read_csv("oneHotEncodedPredictTest.csv")
@@ -70,5 +70,5 @@ print(test_data)
 coef = model.coef_
 intercept = model.intercept_
 
-print("Coefficients:", coef)
-print("Intercept:", intercept)
+#print("Coefficients:", coef)
+#print("Intercept:", intercept)
