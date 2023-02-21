@@ -5,24 +5,7 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="ca35bb24-6ae2-4e2c-ad64-7dd73f7991f7" name="Changes" comment="2/20/23 4:46pm">
-      <change beforePath="$PROJECT_DIR$/../out/production/Final Project/Analysis.class" beforeDir="false" afterPath="$PROJECT_DIR$/../out/production/Final Project/Analysis.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../out/production/Final Project/Data$1.class" beforeDir="false" afterPath="$PROJECT_DIR$/../out/production/Final Project/Data$1.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../out/production/Final Project/Data.class" beforeDir="false" afterPath="$PROJECT_DIR$/../out/production/Final Project/Data.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../out/production/Final Project/Main.class" beforeDir="false" afterPath="$PROJECT_DIR$/../out/production/Final Project/Main.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../out/production/Final Project/README.tex" beforeDir="false" afterPath="$PROJECT_DIR$/../out/production/Final Project/README.tex" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../out/production/Final Project/Window$1.class" beforeDir="false" afterPath="$PROJECT_DIR$/../out/production/Final Project/Window$1.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../out/production/Final Project/Window$2.class" beforeDir="false" afterPath="$PROJECT_DIR$/../out/production/Final Project/Window$2.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../out/production/Final Project/Window.class" beforeDir="false" afterPath="$PROJECT_DIR$/../out/production/Final Project/Window.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../out/production/Final Project/WindowDemo.class" beforeDir="false" afterPath="$PROJECT_DIR$/../out/production/Final Project/WindowDemo.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../out/production/Final Project/main.py" beforeDir="false" afterPath="$PROJECT_DIR$/../out/production/Final Project/main.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../out/production/Final Project/oneHotEncodedPredictTest.csv" beforeDir="false" afterPath="$PROJECT_DIR$/../out/production/Final Project/oneHotEncodedPredictTest.csv" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../out/production/Final Project/predictClass.csv" beforeDir="false" afterPath="$PROJECT_DIR$/../out/production/Final Project/predictClass.csv" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../out/production/Final Project/predictedClassPoint.csv" beforeDir="false" afterPath="$PROJECT_DIR$/../out/production/Final Project/predictedClassPoint.csv" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/main.py" beforeDir="false" afterPath="$PROJECT_DIR$/main.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/oneHotEncodedPredictTest.csv" beforeDir="false" afterPath="$PROJECT_DIR$/oneHotEncodedPredictTest.csv" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/predictClass.csv" beforeDir="false" afterPath="$PROJECT_DIR$/predictClass.csv" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/predictedClassPoint.csv" beforeDir="false" afterPath="$PROJECT_DIR$/predictedClassPoint.csv" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -119,7 +102,7 @@
       <option name="presentableId" value="Default" />
       <updated>1676848336651</updated>
       <workItem from="1676848338344" duration="1085000" />
-      <workItem from="1676849509044" duration="37288000" />
+      <workItem from="1676849509044" duration="38133000" />
     </task>
     <task id="LOCAL-00001" summary="2/19/23 4:13pm">
       <created>1676848393183</created>
@@ -205,7 +188,14 @@
       <option name="project" value="LOCAL" />
       <updated>1676943100050</updated>
     </task>
-    <option name="localTasksCounter" value="13" />
+    <task id="LOCAL-00013" summary="2/20/23 4:46pm">
+      <created>1677017375021</created>
+      <option name="number" value="00013" />
+      <option name="presentableId" value="LOCAL-00013" />
+      <option name="project" value="LOCAL" />
+      <updated>1677017375021</updated>
+    </task>
+    <option name="localTasksCounter" value="14" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
