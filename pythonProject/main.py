@@ -13,12 +13,7 @@ import pandas as pd
 from sklearn.preprocessing import OneHotEncoder
 
 # Load the data from the CSV file
-data = pd.read_csv("classDataTest.csv")
-
-# Bin the Demand column into 5 categories based on equal frequency
-#data['Demand_bin'] = pd.qcut(data['Demand'], q=5, labels=False, duplicates='drop')
-
-#data['Waitlist'] = data['Waitlist'].apply(lambda x: 1 if x > 0 else 0)
+data = pd.read_csv("classDataTestNo0Point.csv")
 
 # Use one hot encoding on the Id and block columns, and the new Demand_bin column
 cols_to_encode = ['Block','Year','Demand','Limit','Waitlist']
@@ -31,14 +26,13 @@ feature_names = encoder.get_feature_names_out(cols_to_encode)
 new_data = pd.concat([pd.DataFrame(encoded_cols, columns=feature_names), data[['MinPoint']]], axis=1)
 
 # Save the new dataframe to a CSV file with column names
-new_data.to_csv("oneHotEncodedDataTest.csv", index=False, header=list(feature_names) + ['MinPoint'])
+new_data.to_csv("oneHotEncodedDataTest0Point.csv", index=False, header=list(feature_names) + ['MinPoint'])
 
 data_predict = pd.read_csv("predictClass.csv")
 
 cols_to_encode = ['Block','Year','Demand','Limit','Waitlist']
 
 encoded_cols = encoder.transform(data_predict[cols_to_encode])
-
 
 # Concatenate the encoded columns with the Waitlist and MinPoint columns and reorder the columns
 new_predict_data = pd.concat([pd.DataFrame(encoded_cols, columns=feature_names)], axis=1)
@@ -50,9 +44,10 @@ new_predict_data.to_csv("oneHotEncodedPredictTest.csv", index=False, header=list
 
 import pandas as pd
 from sklearn.linear_model import LinearRegression
+from sklearn.linear_model import Ridge
 
 # Load the training data from the CSV file
-train_data = pd.read_csv("oneHotEncodedDataTest.csv")
+train_data = pd.read_csv("oneHotEncodedDataTest0Point.csv")
 
 # Load the test data to be predicted
 test_data = pd.read_csv("oneHotEncodedPredictTest.csv")
@@ -62,11 +57,18 @@ train_features = train_data.drop('MinPoint', axis=1)
 train_target = train_data['MinPoint']
 
 # Fit a linear regression model to the training data
-model = LinearRegression().fit(train_features, train_target)
+model = Ridge().fit(train_features, train_target)
 
 # Predict the MinPoint values for the test data
 test_data['MinPoint'] = model.predict(test_data)
 
 # Print the test data with the predicted MinPoint values
+
 test_data.to_csv("predictedClassPoint.csv")
 print(test_data)
+
+coef = model.coef_
+intercept = model.intercept_
+
+print("Coefficients:", coef)
+print("Intercept:", intercept)

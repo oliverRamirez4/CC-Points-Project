@@ -50,6 +50,7 @@ new_predict_data.to_csv("oneHotEncodedPredictTest.csv", index=False, header=list
 
 import pandas as pd
 from sklearn.linear_model import LinearRegression
+from sklearn.linear_model import Ridge
 
 # Load the training data from the CSV file
 train_data = pd.read_csv("oneHotEncodedDataTest.csv")
@@ -62,11 +63,18 @@ train_features = train_data.drop('MinPoint', axis=1)
 train_target = train_data['MinPoint']
 
 # Fit a linear regression model to the training data
-model = LinearRegression().fit(train_features, train_target)
+model = Ridge().fit(train_features, train_target)
 
 # Predict the MinPoint values for the test data
 test_data['MinPoint'] = model.predict(test_data)
 
 # Print the test data with the predicted MinPoint values
+
 test_data.to_csv("predictedClassPoint.csv")
 print(test_data)
+
+coef = model.coef_
+intercept = model.intercept_
+
+print("Coefficients:", coef)
+print("Intercept:", intercept)
