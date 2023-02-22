@@ -438,6 +438,14 @@ public class Data {
         String [] courseList = classList.toArray(new String[classList.size()]);
         return courseList;
     }
+    public String convertSemester(String semester){
+        if (semester.endsWith("F")){
+            return "Fall " + semester.substring(0,4);
+        }
+        if (semester.endsWith("S")){
+            return "Spring " + semester.substring(0,4);
+        }else return semester;
+    }
 
     /**
      * It just runs the python code. Run this after running "sendToPython()". Then you can read the returned data.
