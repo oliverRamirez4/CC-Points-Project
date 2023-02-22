@@ -4,6 +4,10 @@ import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 
 import java.io.*;
 import java.util.*;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
+
+import static junit.framework.Assert.assertTrue;
 
 public class Data {
 
@@ -366,7 +370,7 @@ public class Data {
     public void sendToPython() {
         FileInputStream inputStream = null;
         Workbook python = null;
-        String filePath = "src/pythonProject/classData.xlsx";
+        String filePath = "./Final Project/pythonProject/classData.csv";
 
         try {
             inputStream = new FileInputStream(new File(filePath));
@@ -420,6 +424,7 @@ public class Data {
 
     }
 
+
     public String[] getSemesters() {
         return semesters;
     }
@@ -447,12 +452,95 @@ public class Data {
         }else return semester;
     }
 
+    public String escapeSpecialCharacters(String data) {
+        String escapedData = data.replaceAll("\\R", " ");
+        if (data.contains(",") || data.contains("\"") || data.contains("'")) {
+            data = data.replace("\"", "\"\"");
+            escapedData = "\"" + data + "\"";
+        }
+        return escapedData;
+    }
+
+    public String convertToCSV(String[] data) {
+
+
+        return Stream.of(data)
+                .map(this::escapeSpecialCharacters)
+                .collect(Collectors.joining(","));
+    }
+
+    public static String convertToQuinn(String s) {
+        switch (s) {
+            case "2021S":
+                return "1";
+            case "2021F":
+                return "2";
+            case "2022S":
+                return "3";
+            case "2022F":
+                return "4";
+            case "2023S":
+                return "5";
+            default:
+                return "";
+        }
+    }
+
+    public static String intsBtwn(int start, int end) {
+        int i = start;
+        String output = "";
+        while (i <= end) {
+            output += Integer.toString(i);
+            i++;
+        }
+        return output;
+    }
+
+    public void sendToPython(String course) throws Exception {
+
+        FileInputStream inputStream = null;
+        Workbook python = null;
+        String filePath = "src/pythonProject/classData.csv";
+
+        File file = new File(filePath);
+
+        List<String[]> dataLines = new ArrayList<>();
+
+        dataLines.add(new String[] {"","Block","Year","Demand","Limit","Waitlist","MinPoint"});
+
+        for (String semester : allData.keySet()) {
+            for (String block : allData.get(semester).get(course).keySet()) {
+                dataLines.add(new String[] {
+                        charsBtwn(course, 2, 4), //Course ID
+                        ((block.length() > 1)
+                                ? intsBtwn(block.charAt(0), block.charAt(2))
+                                : ((block == "H")
+                                    ? "9"
+                                    : block)), //Block
+                        convertToQuinn(semester),//charsBtwn(semester, 0, 4), //Year
+                        //charsBtwn(semester, 4, 4), //Semester
+                        String.valueOf(minMaxPoints.get(semester).get(course).get(block).get(2)), //Demand
+                        String.valueOf(minMaxPoints.get(semester).get(course).get(block).get(1)), //Supply
+                        ((minMaxPoints.get(semester).get(course).get(block).get(2) - minMaxPoints.get(semester).get(course).get(block).get(1) <= 0)
+                                ? "0"
+                                : String.valueOf(minMaxPoints.get(semester).get(course).get(block).get(2) - minMaxPoints.get(semester).get(course).get(block).get(1))), //Waitlist
+                        String.valueOf(minMaxPoints.get(semester).get(course).get(block).get(0)), //Minimum Points
+                });
+            }
+        }
+
+        try (PrintWriter pw = new PrintWriter(file)) {
+            dataLines.stream().map(this::convertToCSV).forEach(pw::println);
+        }
+        assertTrue(file.exists());
+    }
+
     /**
      * It just runs the python code. Run this after running "sendToPython()". Then you can read the returned data.
      * @throws Exception
      */
     public static void runPython() throws Exception {
-        ProcessBuilder processBuilder = new ProcessBuilder("python", "./Final Project/pythonProject/main.py");
+        ProcessBuilder processBuilder = new ProcessBuilder("python", "src/pythonProject/main.py");
         processBuilder.redirectErrorStream(true);
 
         processBuilder.start();
@@ -460,8 +548,18 @@ public class Data {
     }
 
 
-    public static void main(String[] args) throws IOException, InvalidFormatException {
+    public static Integer getPrediction() throws Exception {
+        Scanner scanner = new Scanner(new File("src/pythonProject/predictedClassPoint.csv"));
+        scanner.nextLine();
+        String s = scanner.nextLine();
+        Integer i = Integer.valueOf((int) Math.round(Double.valueOf(s.split(",")[s.split(",").length - 1]) + 0.5d)); //This complicated list of words converts to Integer.
+        return i;
+    }
+
+    public static void main(String[] args) throws Exception {
         Data data = new Data();
-        data.sendToPython();
+        data.sendToPython(new Scanner(System.in).nextLine());
+        runPython();
+        System.out.println(getPrediction());
     }
 }
