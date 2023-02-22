@@ -19,12 +19,10 @@ public class Course extends JPanel {
         this.minPoints = minPoints;
         this.pointBids = pointBids;
 
-        blockNumberLabel = new JLabel("block: " + blockNumber);
         minPointsLabel = new JLabel("Minimum Points needed: " + minPoints);
 
-
-        add(blockNumberLabel);
         add(minPointsLabel);
+
 
     }
 

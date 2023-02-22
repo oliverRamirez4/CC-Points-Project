@@ -443,6 +443,14 @@ public class Data {
         String [] courseList = classList.toArray(new String[classList.size()]);
         return courseList;
     }
+    public String convertSemester(String semester){
+        if (semester.endsWith("F")){
+            return "Fall " + semester.substring(0,4);
+        }
+        if (semester.endsWith("S")){
+            return "Spring " + semester.substring(0,4);
+        }else return semester;
+    }
 
     public String escapeSpecialCharacters(String data) {
         String escapedData = data.replaceAll("\\R", " ");
