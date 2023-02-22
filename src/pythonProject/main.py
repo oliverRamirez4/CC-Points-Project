@@ -13,7 +13,7 @@ import pandas as pd
 from sklearn.preprocessing import OneHotEncoder
 
 # Load the data from the CSV file
-data = pd.read_csv("classDataTest.csv")
+data = pd.read_csv("classData.csv")
 
 # Use one hot encoding on the Id and block columns, and the new Demand_bin column
 cols_to_encode = ['Block','Year','Demand','Limit','Waitlist']
@@ -70,5 +70,5 @@ print(test_data)
 coef = model.coef_
 intercept = model.intercept_
 
-#print("Coefficients:", coef)
-#print("Intercept:", intercept)
+print("Coefficients:", coef)
+print("Intercept:", intercept)
