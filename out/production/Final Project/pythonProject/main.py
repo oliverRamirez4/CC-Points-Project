@@ -17,7 +17,7 @@ data = pd.read_csv("classData.csv")
 
 # Use one hot encoding on the Id and block columns, and the new Demand_bin column
 cols_to_encode = ['Block','Year','Demand','Limit','Waitlist']
-encoder = OneHotEncoder(sparse=False)
+encoder = OneHotEncoder(handle_unknown="ignore", sparse=False)
 encoded_cols = encoder.fit_transform(data[cols_to_encode])
 # Get the feature names for the encoded columns
 feature_names = encoder.get_feature_names_out(cols_to_encode)

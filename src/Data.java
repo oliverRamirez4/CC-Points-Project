@@ -516,7 +516,7 @@ public class Data {
                         ((minMaxPoints.get(semester).get(course).get(block).get(2) - minMaxPoints.get(semester).get(course).get(block).get(1) <= 0)
                                 ? "0"
                                 : String.valueOf(minMaxPoints.get(semester).get(course).get(block).get(2) - minMaxPoints.get(semester).get(course).get(block).get(1))), //Waitlist
-                        String.valueOf(minMaxPoints.get(semester).get(course).get(block).get(0)), //Minimum Points
+                        String.valueOf(minMaxPoints.get(semester).get(course).get(block).get(0)) //Minimum Points
                 });
             }
         }
